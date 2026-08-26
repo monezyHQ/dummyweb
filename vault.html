@@ -1,0 +1,1928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monezy — Document & Family Vault OS</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      /* Monezy Light Theme Variables */
+      --bg-app: #f7f9fa;
+      --bg-sidebar: #ffffff;
+      --bg-card: #ffffff;
+      --bg-card-inner: #f9fafb;
+      --bg-card-hover: #f3f4f6;
+      
+      --border-color: #e5e7eb;
+      --border-subtle: #f3f4f6;
+
+      --lime-primary: #10b981;
+      --lime-bright: #059669; /* Darker for light mode contrast */
+      --lime-light: #34d399;
+      --lime-glow: rgba(16, 185, 129, 0.15);
+      
+      --accent-rose: #f43f5e;
+      --accent-coral: #ef4444;
+      --accent-purple: #8b5cf6;
+      --accent-cyan: #06b6d4;
+      --accent-blue: #3b82f6;
+      --accent-amber: #f59e0b;
+
+      --text-white: #ffffff;
+      --text-main: #111827;
+      --text-muted: #4b5563;
+      --text-dim: #6b7280;
+
+      --radius-xl: 16px;
+      --radius-lg: 12px;
+      --radius-md: 8px;
+      --radius-sm: 6px;
+      --radius-pill: 9999px;
+
+      --font-sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bg-app);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      overflow-x: hidden;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    .monezy-layout {
+      display: flex;
+      width: 100vw;
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 260px;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      padding: 24px 16px;
+      justify-content: space-between;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+
+    .brand-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 8px 32px 8px;
+    }
+    .brand-icon-wrap {
+      width: 32px;
+      height: 32px;
+      color: var(--lime-bright);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .brand-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #111827;
+      letter-spacing: -0.4px;
+    }
+
+    .sidebar-head-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 12px 12px 8px;
+    }
+    .sidebar-section-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      font-weight: 700;
+    }
+    .sidebar-head-action {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      background: none;
+      border: none;
+    }
+    .sidebar-head-action:hover {
+      color: var(--lime-bright);
+    }
+
+    .member-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      overflow-y: auto;
+      max-height: 48vh;
+    }
+
+    .member-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+      position: relative;
+    }
+    .member-item:hover {
+      background: var(--bg-card-hover);
+      color: var(--text-main);
+    }
+    .member-item.active {
+      background: #ecfdf5;
+      color: #047857;
+    }
+    .member-item.active .member-avatar {
+      background: #d1fae5;
+      color: #047857;
+      border-color: #a7f3d0;
+    }
+
+    .member-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--bg-card-inner);
+      border: 1px solid var(--border-color);
+      display: grid;
+      place-items: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+    .member-info-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .member-name-txt {
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .member-role-txt {
+      display: none; /* Hidden to match cleaner UI, kept in DOM for functionality */
+    }
+    .member-doc-count {
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: var(--bg-card-inner);
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      color: var(--text-dim);
+      border: 1px solid var(--border-color);
+    }
+    .member-item.active .member-doc-count {
+      background: #ffffff;
+      color: #047857;
+      border-color: #a7f3d0;
+    }
+
+    .btn-add-profile {
+      width: calc(100% - 24px);
+      margin: 12px auto 0;
+      background: transparent;
+      border: 1px dashed var(--border-color);
+      color: var(--text-muted);
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-add-profile:hover {
+      border-color: var(--lime-bright);
+      color: var(--lime-bright);
+      background: #f8fafc;
+    }
+
+    .sidebar-bottom {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding-top: 16px;
+    }
+
+    /* Adapting User Profile Pill to look like "Raksha - Household" */
+    .user-profile-pill {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      cursor: pointer;
+      background: transparent;
+      border-radius: var(--radius-md);
+      transition: all 0.2s;
+    }
+    .user-profile-pill:hover {
+      background: var(--bg-card-hover);
+    }
+    .user-avatar-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      color: #475569;
+    }
+
+    .vault-security-tag {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      padding: 12px;
+      background: #f8fafc;
+      border-radius: var(--radius-lg);
+      margin: 0 12px;
+      text-align: center;
+    }
+    .vault-security-tag i {
+      color: var(--lime-bright);
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+
+    /* MAIN VIEWPORT */
+    .main-content {
+      flex: 1;
+      padding: 32px 48px;
+      overflow-y: auto;
+      max-width: calc(100vw - 260px);
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    /* TOP ACTION BAR */
+    .top-action-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .vault-heading-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+    }
+    .vault-heading-sub {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .top-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      position: relative;
+      width: 260px;
+    }
+    .search-box i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      width: 16px;
+      height: 16px;
+    }
+    .search-input {
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 10px 14px 10px 38px;
+      color: var(--text-main);
+      font-size: 0.85rem;
+      outline: none;
+      transition: all 0.2s;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+    .search-input:focus {
+      border-color: var(--lime-bright);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+
+    /* Restyling Buttons to match UI outline buttons */
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-action-ghost {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      border-radius: var(--radius-md);
+      padding: 10px 16px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+    .btn-action-ghost:hover {
+      background: #f9fafb;
+      border-color: #d1d5db;
+      color: var(--text-main);
+    }
+    /* Specific colored outline buttons */
+    .btn-outline-green { color: var(--lime-bright); }
+    .btn-outline-green i { color: var(--lime-bright); }
+    .btn-outline-red { color: var(--accent-coral); }
+    .btn-outline-red i { color: var(--accent-coral); }
+    .btn-outline-blue { color: var(--accent-blue); }
+    .btn-outline-blue i { color: var(--accent-blue); }
+
+    .btn-primary {
+      background: var(--lime-primary);
+      color: #ffffff;
+      border: 1px solid var(--lime-bright);
+      border-radius: var(--radius-md);
+      padding: 10px 18px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+    }
+    .btn-primary:hover {
+      background: var(--lime-bright);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 6px rgba(16, 185, 129, 0.25);
+    }
+
+    .disk-dock {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 6px 6px 6px 14px;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+    .disk-status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      max-width: 180px;
+      cursor: pointer;
+    }
+    .disk-status-chip .disk-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-dim);
+      flex-shrink: 0;
+    }
+    .disk-status-chip.linked { color: var(--lime-bright); }
+    .disk-status-chip.linked .disk-dot { background: var(--lime-primary); }
+    .disk-status-chip.pending { color: var(--accent-amber); }
+    .disk-status-chip.pending .disk-dot { background: var(--accent-amber); }
+    .disk-status-chip .disk-status-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Category Filter Chips (matching the Household/Bharat tabs) */
+    .category-filter-strip {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 4px;
+      background: #f1f5f9;
+      border-radius: var(--radius-lg);
+      width: max-content;
+    }
+    .category-filter-strip::-webkit-scrollbar { display: none; }
+
+    .filter-chip {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .filter-chip:hover {
+      color: var(--text-main);
+    }
+    .filter-chip.active {
+      background: #ffffff;
+      color: var(--text-main);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    /* VAULT CARDS GRID */
+    .vault-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 20px;
+    }
+
+    .doc-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+    .doc-card:hover {
+      border-color: #d1d5db;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.04);
+      transform: translateY(-2px);
+    }
+
+    /* Category Badges (Light mode adjusted) */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      align-self: flex-start;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--radius-md);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .cat-health { background: #fdf2f8; color: #db2777; border: 1px solid #fbcfe8; }
+    .cat-term { background: #f5f3ff; color: #6d28d9; border: 1px solid #ede9fe; }
+    .cat-corp { background: #eef2ff; color: #4338ca; border: 1px solid #e0e7ff; }
+    .cat-loan { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+    .cat-brokerage { background: #fffbeb; color: #d97706; border: 1px solid #fef3c7; }
+    .cat-mf { background: #ecfdf5; color: #047857; border: 1px solid #d1fae5; }
+    .cat-property { background: #ecfeff; color: #0e7490; border: 1px solid #cffafe; }
+    .cat-bank { background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+    .cat-other { background: #f8fafc; color: #475569; border: 1px solid #e2e8f0; }
+
+    .doc-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text-main);
+    }
+
+    .code-box {
+      font-family: var(--font-mono);
+      background: #f8fafc;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid #e2e8f0;
+      color: #334155;
+    }
+
+    .notes-box {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      white-space: pre-wrap;
+      line-height: 1.5;
+      background: #f9fafb;
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      border-left: 3px solid var(--lime-light);
+    }
+
+    .file-attachment {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    .doc-card-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .btn-icon-action {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s;
+    }
+    .btn-icon-action:hover {
+      color: var(--text-main);
+      background: #f1f5f9;
+    }
+    .btn-icon-action.trash:hover {
+      color: var(--accent-coral);
+      background: #fef2f2;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 6rem 2rem;
+      color: var(--text-muted);
+      border: 1px dashed var(--border-color);
+      border-radius: var(--radius-xl);
+      background: var(--bg-card);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+    .empty-state i {
+      color: var(--lime-primary);
+      margin-bottom: 8px;
+    }
+
+    /* Modal Styling - Light Mode */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 24, 39, 0.4);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      display: none;
+      place-items: center;
+      padding: 16px;
+    }
+    .modal-backdrop.active { display: grid; }
+
+    .modal-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      width: 100%;
+      max-width: 520px;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      position: relative;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    .modal-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-title-txt {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    input, select, textarea {
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      font-family: inherit;
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.2s;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--lime-primary);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+
+    /* User Management Table */
+    .manage-members-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 40vh;
+      overflow-y: auto;
+    }
+    .manage-member-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+    }
+
+    /* Toast */
+    .app-toast {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      z-index: 600;
+      display: none;
+      padding: 14px 24px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #ffffff;
+      background: #111827;
+      border-radius: var(--radius-md);
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+    }
+    .app-toast.show { display: flex; align-items: center; gap: 8px; animation: popIn 0.2s ease-out; }
+    .app-toast.error { background: var(--accent-coral); }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: translateY(10px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="monezy-layout">
+  
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div>
+      <div class="brand-header">
+        <div class="brand-icon-wrap">
+          <i data-lucide="leaf" style="width:28px;height:28px;"></i>
+        </div>
+        <div class="brand-title">Monezy</div>
+      </div>
+
+      <div class="sidebar-head-row">
+        <span class="sidebar-section-title">Family Profiles</span>
+        <button class="sidebar-head-action" onclick="openModal('manageMembersModal')">
+          <i data-lucide="settings" style="width:14px;height:14px;"></i> Manage
+        </button>
+      </div>
+
+      <ul class="member-list" id="memberList"></ul>
+
+      <button class="btn-add-profile" onclick="openAddMemberModal()">
+        <i data-lucide="plus" style="width:16px;height:16px;"></i> Add Profile
+      </button>
+    </div>
+
+    <div class="sidebar-bottom">
+      <div class="vault-security-tag">
+        <i data-lucide="shield-check"></i>
+        <span>AES-256 Encrypted</span>
+      </div>
+
+      <div class="user-profile-pill" onclick="openModal('manageMembersModal')">
+        <div class="user-avatar-img" id="sidebarAvatar">R</div>
+        <div style="flex:1; overflow:hidden;">
+          <div style="font-weight: 700; font-size: 0.9rem; color: var(--text-main); text-overflow:ellipsis; overflow:hidden; white-space:nowrap;" id="sidebarActiveName">Raksha</div>
+          <div style="font-size: 0.8rem; color: var(--text-dim);" id="sidebarActiveRole">Household</div>
+        </div>
+        <i data-lucide="chevron-down" style="width: 16px; height: 16px; color: var(--text-dim);"></i>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN SCROLLABLE AREA -->
+  <main class="main-content">
+    
+    <!-- TOP BAR -->
+    <div class="top-action-bar">
+      <div>
+        <h2 class="vault-heading-title" id="activeMemberHeading">Good morning, Raksha 👋</h2>
+        <p class="vault-heading-sub">Here is your secure financial overview & vault records</p>
+      </div>
+
+      <div class="top-controls">
+        <div class="search-box">
+          <i data-lucide="search"></i>
+          <input type="text" class="search-input" id="vaultSearchInput" placeholder="Search records..." oninput="handleSearch()" />
+        </div>
+
+        <div class="disk-dock">
+          <div class="disk-status-chip" id="diskStatusChip" onclick="saveToUserDisk()">
+            <span class="disk-dot"></span>
+            <span class="disk-status-text" id="diskStatusText">Browser storage</span>
+          </div>
+          <button class="btn-action-ghost" style="padding: 6px 12px; font-size: 0.8rem; border-color: transparent;" onclick="loadFromUserDisk()">
+             Open Local
+          </button>
+          <input type="file" id="diskFileInput" accept="application/json,.json" style="display: none;" />
+        </div>
+
+        <button class="btn-action-ghost btn-outline-green" onclick="openModal('importModal')">
+          <i data-lucide="arrow-down" style="width:16px;height:16px;"></i> Restore .vault
+        </button>
+        <button class="btn-action-ghost btn-outline-blue" onclick="openModal('exportModal')">
+          <i data-lucide="arrow-up" style="width:16px;height:16px;"></i> Export Backup
+        </button>
+        <button class="btn-primary" onclick="openAddDocModal()">
+          <i data-lucide="plus" style="width:16px;height:16px;"></i> Add Record
+        </button>
+      </div>
+    </div>
+
+    <!-- CATEGORY FILTER STRIP -->
+    <div class="category-filter-strip" id="categoryFilters">
+      <button class="filter-chip active" onclick="filterCategory('ALL')">
+        <i data-lucide="layout-grid" style="width:16px;height:16px;"></i> All Records
+      </button>
+      <button class="filter-chip" onclick="filterCategory('Health Insurance')">Health Insurance</button>
+      <button class="filter-chip" onclick="filterCategory('Term Insurance')">Term Insurance</button>
+      <button class="filter-chip" onclick="filterCategory('Loan Documents')">Loans</button>
+      <button class="filter-chip" onclick="filterCategory('Brokerage & Demat')">Brokerage</button>
+      <button class="filter-chip" onclick="filterCategory('MF & Equity')">Investments</button>
+      <button class="filter-chip" onclick="filterCategory('Property & Home')">Real Estate</button>
+      <button class="filter-chip" onclick="filterCategory('Banking & FD')">Banking</button>
+    </div>
+
+    <!-- CARDS DISPLAY GRID -->
+    <div class="vault-grid" id="recordsGrid"></div>
+
+  </main>
+</div>
+
+<!-- TOAST -->
+<div class="app-toast" id="appToast"></div>
+
+<!-- MODAL: ADD / EDIT RECORD -->
+<div class="modal-backdrop" id="addDocModal">
+  <div class="modal-box">
+    <div class="modal-header-row">
+      <h3 class="modal-title-txt" id="recordModalHeading">Store Vault Record</h3>
+      <i data-lucide="x" style="cursor:pointer; color:var(--text-dim);" onclick="closeModal('addDocModal')"></i>
+    </div>
+    <form id="recordForm" onsubmit="handleSaveRecord(event)" style="display: flex; flex-direction: column; gap: 16px;">
+      <input type="hidden" id="editRecordId" value="" />
+
+      <div class="form-group">
+        <label>Family Member Profile</label>
+        <select id="docMemberSelect" required></select>
+      </div>
+
+      <div class="form-group">
+        <label>Category</label>
+        <select id="docCategory" required>
+          <option value="Health Insurance">Health Insurance</option>
+          <option value="Term Insurance">Term Insurance</option>
+          <option value="Corporate Health">Corporate Health Insurance</option>
+          <option value="Loan Documents">Loan Documents</option>
+          <option value="Brokerage & Demat">Brokerage & Demat Records</option>
+          <option value="MF & Equity">Mutual Funds & Equity</option>
+          <option value="Property & Home">Home / Property Papers</option>
+          <option value="Banking & FD">Fixed Deposits & Bank Records</option>
+          <option value="Other">Other Unique Record</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Record Name / Institution</label>
+        <input type="text" id="docTitle" placeholder="e.g. HDFC Ergo Optima, SBI Home Loan" required>
+      </div>
+
+      <div class="form-group">
+        <label>Policy # / Folio / Account / Access Code</label>
+        <input type="text" id="docCode" placeholder="e.g. POL-883920194, FOLIO-992384">
+      </div>
+
+      <div class="form-group">
+        <label>Secure Notes / Emergency Details</label>
+        <textarea id="docNotes" rows="3" placeholder="Nominee details, TPA emergency contacts..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Attach File (PDF, Image, Document)</label>
+        <input type="file" id="docFile" style="font-size: 0.85rem; padding: 6px;">
+        <div id="existingFileNote" style="font-size: 0.8rem; color: var(--lime-bright); display: none;"></div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 10px;">
+        <button type="button" class="btn-action-ghost" onclick="closeModal('addDocModal')">Cancel</button>
+        <button type="submit" class="btn-primary" id="btnSaveRecord">Save to Vault</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL: ADD / EDIT MEMBER PROFILE -->
+<div class="modal-backdrop" id="memberModal">
+  <div class="modal-box">
+    <div class="modal-header-row">
+      <h3 class="modal-title-txt" id="memberModalHeading">Add Member Profile</h3>
+      <i data-lucide="x" style="cursor:pointer; color:var(--text-dim);" onclick="closeModal('memberModal')"></i>
+    </div>
+    <form onsubmit="handleSaveMember(event)" style="display: flex; flex-direction: column; gap: 16px;">
+      <input type="hidden" id="editMemberOriginalName" value="" />
+
+      <div class="form-group">
+        <label>Member Full Name</label>
+        <input type="text" id="memberNameInput" placeholder="e.g. Bharat, Raksha" minlength="2" required />
+      </div>
+
+      <div class="form-group">
+        <label>Role</label>
+        <input type="text" id="memberRoleInput" placeholder="e.g. Household, Primary" required />
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 10px;">
+        <button type="button" class="btn-action-ghost" onclick="closeModal('memberModal')">Cancel</button>
+        <button type="submit" class="btn-primary" id="btnSaveMember">Save Profile</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL: MANAGE ALL MEMBERS -->
+<div class="modal-backdrop" id="manageMembersModal">
+  <div class="modal-box">
+    <div class="modal-header-row">
+      <h3 class="modal-title-txt">Manage Family Profiles</h3>
+      <i data-lucide="x" style="cursor:pointer; color:var(--text-dim);" onclick="closeModal('manageMembersModal')"></i>
+    </div>
+    <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5;">View, edit, or remove members.</p>
+    
+    <div class="manage-members-list" id="manageMembersList"></div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
+      <button class="btn-primary" onclick="closeModal('manageMembersModal'); openAddMemberModal();">
+        <i data-lucide="user-plus" style="width:16px;height:16px;"></i> Add Profile
+      </button>
+      <button type="button" class="btn-action-ghost" onclick="closeModal('manageMembersModal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: CONFIRM DELETE -->
+<div class="modal-backdrop" id="confirmDialog">
+  <div class="modal-box" style="max-width: 400px;">
+    <div class="modal-header-row">
+      <h3 class="modal-title-txt" id="confirmTitle">Confirm Deletion</h3>
+      <i data-lucide="x" style="cursor:pointer; color:var(--text-dim);" onclick="closeModal('confirmDialog')"></i>
+    </div>
+    <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5;" id="confirmBody">Are you sure you want to permanently delete this item?</p>
+    <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 10px;">
+      <button type="button" class="btn-action-ghost" onclick="closeModal('confirmDialog')">Cancel</button>
+      <button type="button" class="btn-primary" id="confirmActionBtn" style="background:var(--accent-coral); border-color:var(--accent-coral);">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: EXPORT ENCRYPTED BACKUP -->
+<div class="modal-backdrop" id="exportModal">
+  <div class="modal-box">
+    <div class="modal-header-row">
+      <h3 class="modal-title-txt">Export Encrypted Backup</h3>
+      <i data-lucide="x" style="cursor:pointer; color:var(--text-dim);" onclick="closeModal('exportModal')"></i>
+    </div>
+    <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5;">Generates a standalone AES-256-GCM encrypted backup file containing all family records, files, notes, and profiles.</p>
+    <form onsubmit="handleExport(event)" style="display: flex; flex-direction: column; gap: 16px;">
+      <div class="form-group">
+        <label>Passphrase to Encrypt</label>
+        <input type="password" id="exportPassphrase" required placeholder="Enter a strong encryption passphrase">
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 10px;">
+        <button type="button" class="btn-action-ghost" onclick="closeModal('exportModal')">Cancel</button>
+        <button type="submit" class="btn-primary">Download .vault</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL: IMPORT ENCRYPTED BACKUP -->
+<div class="modal-backdrop" id="importModal">
+  <div class="modal-box">
+    <div class="modal-header-row">
+      <h3 class="modal-title-txt">Unlock / Restore Backup</h3>
+      <i data-lucide="x" style="cursor:pointer; color:var(--text-dim);" onclick="closeModal('importModal')"></i>
+    </div>
+    <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5;">Select your <code>.vault</code> file and input the passphrase set during export to restore your vault.</p>
+    <form onsubmit="handleImport(event)" style="display: flex; flex-direction: column; gap: 16px;">
+      <div class="form-group">
+        <label>Vault File (.vault)</label>
+        <input type="file" id="importFile" accept=".vault" required style="font-size: 0.85rem; padding:6px;">
+      </div>
+      <div class="form-group">
+        <label>Decryption Passphrase</label>
+        <input type="password" id="importPassphrase" required placeholder="Enter the decryption password">
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 10px;">
+        <button type="button" class="btn-action-ghost" onclick="closeModal('importModal')">Cancel</button>
+        <button type="submit" class="btn-primary">Decrypt & Restore</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Scripts (Unchanged Vault Functionality) -->
+<script>
+  const DB_KEY = "AEGIS_VAULT_DATA_V3";
+  const DEFAULT_STATE = {
+    members: ["Household"],
+    memberRoles: { "Household": "Household" },
+    activeMember: "Household",
+    currentFilter: "ALL",
+    records: []
+  };
+  let state = { ...DEFAULT_STATE, members: [...DEFAULT_STATE.members], memberRoles: { ...DEFAULT_STATE.memberRoles }, records: [] };
+  let searchQuery = "";
+
+  const categoryMap = {
+    'Health Insurance': { class: 'cat-health', icon: 'heart-pulse' },
+    'Term Insurance': { class: 'cat-term', icon: 'shield' },
+    'Corporate Health': { class: 'cat-corp', icon: 'briefcase' },
+    'Loan Documents': { class: 'cat-loan', icon: 'file-text' },
+    'Brokerage & Demat': { class: 'cat-brokerage', icon: 'trending-up' },
+    'MF & Equity': { class: 'cat-mf', icon: 'pie-chart' },
+    'Property & Home': { class: 'cat-property', icon: 'home' },
+    'Banking & FD': { class: 'cat-bank', icon: 'landmark' },
+    'Other': { class: 'cat-other', icon: 'paperclip' }
+  };
+
+  const VAULT_IDB_NAME = "aegis_vault";
+  const VAULT_IDB_STORE = "kv";
+  const VAULT_IDB_KEY = "state";
+
+  function applyLoadedState(parsed) {
+    if (!parsed || typeof parsed !== "object") return false;
+    const members = Array.isArray(parsed.members) && parsed.members.length
+      ? parsed.members
+      : [...DEFAULT_STATE.members];
+    
+    let activeMember = parsed.activeMember || members[0] || DEFAULT_STATE.activeMember;
+    if (!members.includes(activeMember)) activeMember = members[0];
+    
+    const memberRoles = (parsed.memberRoles && typeof parsed.memberRoles === 'object')
+      ? parsed.memberRoles
+      : {};
+    
+    members.forEach(m => {
+      if (!memberRoles[m]) memberRoles[m] = "Family Member";
+    });
+
+    state = {
+      members,
+      memberRoles,
+      activeMember,
+      currentFilter: parsed.currentFilter || "ALL",
+      records: Array.isArray(parsed.records) ? parsed.records : []
+    };
+    return true;
+  }
+
+  function openVaultIdb() {
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open(VAULT_IDB_NAME, 1);
+      req.onupgradeneeded = () => {
+        if (!req.result.objectStoreNames.contains(VAULT_IDB_STORE)) {
+          req.result.createObjectStore(VAULT_IDB_STORE);
+        }
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  async function idbGetState() {
+    const db = await openVaultIdb();
+    try {
+      return await new Promise((resolve, reject) => {
+        const tx = db.transaction(VAULT_IDB_STORE, "readonly");
+        const req = tx.objectStore(VAULT_IDB_STORE).get(VAULT_IDB_KEY);
+        req.onsuccess = () => resolve(req.result || null);
+        req.onerror = () => reject(req.error);
+      });
+    } finally {
+      db.close();
+    }
+  }
+
+  async function idbSetState(data) {
+    const db = await openVaultIdb();
+    try {
+      await new Promise((resolve, reject) => {
+        const tx = db.transaction(VAULT_IDB_STORE, "readwrite");
+        tx.objectStore(VAULT_IDB_STORE).put(data, VAULT_IDB_KEY);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+      });
+    } finally {
+      db.close();
+    }
+  }
+
+  function loadFromLocalStorage() {
+    try {
+      const saved = localStorage.getItem(DB_KEY);
+      if (!saved) return false;
+      return applyLoadedState(JSON.parse(saved));
+    } catch (e) {
+      console.error("Storage parse error:", e);
+      return false;
+    }
+  }
+
+  function mirrorToLocalStorage() {
+    try {
+      const mirror = {
+        members: state.members,
+        memberRoles: state.memberRoles,
+        activeMember: state.activeMember,
+        currentFilter: state.currentFilter,
+        records: state.records.map((r) => ({
+          id: r.id,
+          member: r.member,
+          category: r.category,
+          title: r.title,
+          code: r.code,
+          notes: r.notes,
+          createdAt: r.createdAt,
+          file: r.file ? { name: r.file.name, type: r.file.type } : null
+        }))
+      };
+      localStorage.setItem(DB_KEY, JSON.stringify(mirror));
+    } catch (_) { }
+  }
+
+  async function persistVault() {
+    await idbSetState({
+      members: state.members,
+      memberRoles: state.memberRoles,
+      activeMember: state.activeMember,
+      currentFilter: state.currentFilter,
+      records: state.records
+    });
+    mirrorToLocalStorage();
+  }
+
+  function saveState() {
+    const pending = persistVault().catch((err) => {
+      showToast("Could not save locally. Export or save to disk.", true);
+      throw err;
+    });
+    scheduleDiskWrite();
+    render();
+    return pending;
+  }
+
+  async function loadVault() {
+    try {
+      const fromIdb = await idbGetState();
+      if (fromIdb && applyLoadedState(fromIdb)) return;
+    } catch (e) { }
+    if (loadFromLocalStorage() && state.records.length) {
+      try { await persistVault(); } catch (_) {}
+    }
+  }
+
+  async function init() {
+    await loadVault();
+    render();
+    initDiskLink();
+    lucide.createIcons();
+  }
+
+  const DISK_IDB_NAME = "aegis_fs";
+  const DISK_IDB_STORE = "handles";
+  const DISK_FILE_NAME = "monezy-vault.json";
+  const canUseFilePicker = typeof window.showSaveFilePicker === "function";
+  let linkedFileHandle = null;
+  let pendingFileHandle = null;
+  let linkedDirHandle = null;
+  let diskWriteTimer = null;
+
+  function buildDiskPayload() {
+    return {
+      app: "monezy-vault",
+      version: 2,
+      exportedAt: new Date().toISOString(),
+      state
+    };
+  }
+
+  function showToast(message, isError = false) {
+    const el = document.getElementById("appToast");
+    if (!el) return;
+    el.textContent = message;
+    el.className = isError ? "app-toast error show" : "app-toast show";
+    setTimeout(() => el.classList.remove("show"), 3200);
+  }
+
+  function diskFileName() {
+    const handle = linkedFileHandle || pendingFileHandle;
+    return (handle && handle.name) || localStorage.getItem("aegis_disk_name") || DISK_FILE_NAME;
+  }
+
+  function updateDiskStatus() {
+    const chip = document.getElementById("diskStatusChip");
+    const label = document.getElementById("diskStatusText");
+    if (!chip || !label) return;
+    chip.classList.remove("linked", "pending");
+    const name = diskFileName();
+
+    if (linkedFileHandle) {
+      chip.classList.add("linked");
+      label.textContent = "Syncing to: " + name;
+    } else if (pendingFileHandle || linkedDirHandle) {
+      chip.classList.add("pending");
+      label.textContent = "Allow write: " + name;
+    } else {
+      label.textContent = "Browser storage";
+    }
+  }
+
+  function openDiskIdb() {
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open(DISK_IDB_NAME, 1);
+      req.onupgradeneeded = () => {
+        if (!req.result.objectStoreNames.contains(DISK_IDB_STORE)) {
+          req.result.createObjectStore(DISK_IDB_STORE);
+        }
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  async function persistHandle(handle, key) {
+    try {
+      const db = await openDiskIdb();
+      await new Promise((resolve, reject) => {
+        const tx = db.transaction(DISK_IDB_STORE, "readwrite");
+        tx.objectStore(DISK_IDB_STORE).put(handle, key);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+      });
+      db.close();
+    } catch (_) {}
+  }
+
+  async function restoreHandle(key) {
+    try {
+      const db = await openDiskIdb();
+      const handle = await new Promise((resolve, reject) => {
+        const tx = db.transaction(DISK_IDB_STORE, "readonly");
+        const req = tx.objectStore(DISK_IDB_STORE).get(key);
+        req.onsuccess = () => resolve(req.result || null);
+        req.onerror = () => reject(req.error);
+      });
+      db.close();
+      return handle || null;
+    } catch (_) { return null; }
+  }
+
+  async function hasWritePermission(handle) {
+    if (!handle || !handle.queryPermission) return false;
+    try { return (await handle.queryPermission({ mode: "readwrite" })) === "granted"; } catch (_) { return false; }
+  }
+
+  async function requestWritePermission(handle) {
+    if (!handle) return false;
+    if (await hasWritePermission(handle)) return true;
+    if (!handle.requestPermission) return false;
+    try { return (await handle.requestPermission({ mode: "readwrite" })) === "granted"; } catch (_) { return false; }
+  }
+
+  async function writeLinkedFile() {
+    if (!linkedFileHandle || !linkedFileHandle.createWritable) return false;
+    try {
+      if (!(await hasWritePermission(linkedFileHandle))) return false;
+      const writable = await linkedFileHandle.createWritable();
+      await writable.write(JSON.stringify(buildDiskPayload(), null, 2));
+      await writable.close();
+      localStorage.setItem("aegis_disk_name", linkedFileHandle.name || DISK_FILE_NAME);
+      localStorage.setItem("aegis_disk_saved_at", new Date().toISOString());
+      updateDiskStatus();
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  function scheduleDiskWrite() {
+    if (!linkedFileHandle) return;
+    clearTimeout(diskWriteTimer);
+    diskWriteTimer = setTimeout(() => { writeLinkedFile(); }, 400);
+  }
+
+  async function saveToUserDisk() {
+    if (canUseFilePicker) {
+      try {
+        const handle = await window.showSaveFilePicker({
+          suggestedName: DISK_FILE_NAME,
+          startIn: "documents",
+          types: [{ description: "Monezy vault data", accept: { "application/json": [".json"] } }]
+        });
+        if (await requestWritePermission(handle)) {
+          linkedFileHandle = handle;
+          await persistHandle(handle, "file");
+          await writeLinkedFile();
+          showToast("File linked! Auto-save enabled.");
+          updateDiskStatus();
+          return;
+        }
+      } catch (err) {
+        if (err && err.name === "AbortError") return;
+      }
+    }
+    const blob = new Blob([JSON.stringify(buildDiskPayload(), null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = DISK_FILE_NAME;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    showToast("Downloaded backup.");
+  }
+
+  async function loadFromUserDisk() {
+    if (typeof window.showOpenFilePicker === "function") {
+      try {
+        const [handle] = await window.showOpenFilePicker({
+          multiple: false,
+          startIn: "documents",
+          types: [{ description: "Monezy vault data", accept: { "application/json": [".json"] } }]
+        });
+        const file = await handle.getFile();
+        const text = await file.text();
+        const data = JSON.parse(text);
+        applyDiskPayload(data);
+        linkedFileHandle = handle;
+        await persistHandle(handle, "file");
+        updateDiskStatus();
+        showToast("Loaded " + file.name);
+        return;
+      } catch (err) {
+        if (err && err.name === "AbortError") return;
+        showToast("Could not read file.", true);
+        return;
+      }
+    }
+    document.getElementById("diskFileInput").click();
+  }
+
+  function applyDiskPayload(data) {
+    const incoming = data && data.state ? data.state : data;
+    if (!incoming || !Array.isArray(incoming.members) || !Array.isArray(incoming.records)) {
+      throw new Error("Not a vault file");
+    }
+    applyLoadedState(incoming);
+    saveState();
+  }
+
+  async function initDiskLink() {
+    const input = document.getElementById("diskFileInput");
+    if (input) {
+      input.addEventListener("change", async (event) => {
+        const file = event.target.files && event.target.files[0];
+        event.target.value = "";
+        if (!file) return;
+        try {
+          const text = await file.text();
+          const data = JSON.parse(text);
+          applyDiskPayload(data);
+          showToast(`Loaded ${file.name}`);
+        } catch (err) {
+          showToast("Invalid JSON file.", true);
+        }
+      });
+    }
+
+    linkedDirHandle = await restoreHandle("dir");
+    const handle = await restoreHandle("file");
+    if (handle) {
+      if (await hasWritePermission(handle)) {
+        linkedFileHandle = handle;
+        pendingFileHandle = null;
+      } else {
+        pendingFileHandle = handle;
+        linkedFileHandle = null;
+      }
+    }
+    updateDiskStatus();
+  }
+
+  function openAddMemberModal() {
+    document.getElementById("memberModalHeading").innerText = "Add Profile";
+    document.getElementById("editMemberOriginalName").value = "";
+    document.getElementById("memberNameInput").value = "";
+    document.getElementById("memberRoleInput").value = "";
+    document.getElementById("btnSaveMember").innerText = "Save Profile";
+    openModal("memberModal");
+  }
+
+  function openEditMemberModal(name) {
+    document.getElementById("memberModalHeading").innerText = "Edit Profile";
+    document.getElementById("editMemberOriginalName").value = name;
+    document.getElementById("memberNameInput").value = name;
+    document.getElementById("memberRoleInput").value = state.memberRoles[name] || "Member";
+    document.getElementById("btnSaveMember").innerText = "Update Profile";
+    closeModal("manageMembersModal");
+    openModal("memberModal");
+  }
+
+  function handleSaveMember(e) {
+    e.preventDefault();
+    const origName = document.getElementById("editMemberOriginalName").value;
+    const name = document.getElementById("memberNameInput").value.trim();
+    const role = document.getElementById("memberRoleInput").value.trim();
+
+    if (name.length < 2) {
+      showToast("Name must be at least 2 characters.", true);
+      return;
+    }
+
+    if (origName) {
+      if (origName !== name && state.members.includes(name)) {
+        showToast("Profile already exists.", true);
+        return;
+      }
+      const idx = state.members.indexOf(origName);
+      if (idx !== -1) state.members[idx] = name;
+      delete state.memberRoles[origName];
+      state.memberRoles[name] = role;
+
+      state.records.forEach(r => {
+        if (r.member === origName) r.member = name;
+      });
+
+      if (state.activeMember === origName) state.activeMember = name;
+      showToast(`Updated profile: ${name}`);
+    } else {
+      if (state.members.includes(name)) {
+        showToast("Profile already exists.", true);
+        return;
+      }
+      state.members.push(name);
+      state.memberRoles[name] = role;
+      state.activeMember = name;
+      showToast(`Added profile: ${name}`);
+    }
+
+    saveState();
+    closeModal("memberModal");
+  }
+
+  function promptDeleteMember(name) {
+    if (state.members.length <= 1) {
+      showToast("At least one profile is required.", true);
+      return;
+    }
+
+    const docCount = state.records.filter(r => r.member === name).length;
+    document.getElementById("confirmTitle").innerText = `Delete Profile: ${name}`;
+    document.getElementById("confirmBody").innerText = `Are you sure? This will delete ${name} and ${docCount} associated record(s).`;
+
+    const actionBtn = document.getElementById("confirmActionBtn");
+    actionBtn.onclick = () => {
+      state.members = state.members.filter(m => m !== name);
+      delete state.memberRoles[name];
+      state.records = state.records.filter(r => r.member !== name);
+      if (state.activeMember === name) {
+        state.activeMember = state.members[0];
+      }
+      saveState();
+      closeModal("confirmDialog");
+      renderManageMembersModal();
+      showToast(`Deleted profile: ${name}`);
+    };
+
+    openModal("confirmDialog");
+  }
+
+  function renderManageMembersModal() {
+    const list = document.getElementById("manageMembersList");
+    list.innerHTML = "";
+
+    state.members.forEach(m => {
+      const docCount = state.records.filter(r => r.member === m).length;
+      const role = state.memberRoles[m] || "Member";
+      const initial = m.charAt(0).toUpperCase();
+
+      const row = document.createElement("div");
+      row.className = "manage-member-row";
+      row.innerHTML = `
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div class="member-avatar">${initial}</div>
+          <div>
+            <div style="font-weight:700; font-size:0.9rem; color:var(--text-main);">${escapeHtml(m)}</div>
+            <div style="font-size:0.8rem; color:var(--text-dim);">${escapeHtml(role)} • ${docCount} records</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <button class="btn-icon-action" onclick="openEditMemberModal('${escapeHtml(m)}')" title="Edit">
+            <i data-lucide="edit-3" style="width:16px;height:16px;"></i>
+          </button>
+          <button class="btn-icon-action trash" onclick="promptDeleteMember('${escapeHtml(m)}')" title="Delete">
+            <i data-lucide="trash-2" style="width:16px;height:16px;"></i>
+          </button>
+        </div>
+      `;
+      list.appendChild(row);
+    });
+
+    lucide.createIcons();
+  }
+
+  function setActiveMember(name) {
+    state.activeMember = name;
+    saveState();
+  }
+
+  function filterCategory(cat) {
+    state.currentFilter = cat;
+    document.querySelectorAll('.filter-chip').forEach(btn => {
+      btn.classList.toggle('active', btn.textContent.includes(cat) || (cat === 'ALL' && btn.textContent.includes('All Records')));
+    });
+    renderGrid();
+  }
+
+  function handleSearch() {
+    searchQuery = document.getElementById("vaultSearchInput").value.trim().toLowerCase();
+    renderGrid();
+  }
+
+  function openAddDocModal() {
+    document.getElementById("recordModalHeading").innerText = "Store Vault Record";
+    document.getElementById("editRecordId").value = "";
+    document.getElementById("recordForm").reset();
+    document.getElementById("existingFileNote").style.display = "none";
+    document.getElementById("btnSaveRecord").innerText = "Save to Vault";
+
+    populateMemberSelect(state.activeMember);
+    openModal("addDocModal");
+  }
+
+  function openEditDocModal(recordId) {
+    const record = state.records.find(r => r.id === recordId);
+    if (!record) return;
+
+    document.getElementById("recordModalHeading").innerText = "Edit Vault Record";
+    document.getElementById("editRecordId").value = record.id;
+    populateMemberSelect(record.member);
+    document.getElementById("docCategory").value = record.category;
+    document.getElementById("docTitle").value = record.title;
+    document.getElementById("docCode").value = record.code || "";
+    document.getElementById("docNotes").value = record.notes || "";
+    document.getElementById("docFile").value = "";
+
+    const fileNote = document.getElementById("existingFileNote");
+    if (record.file) {
+      fileNote.style.display = "block";
+      fileNote.innerText = `Current: ${record.file.name} (Upload new to replace)`;
+    } else {
+      fileNote.style.display = "none";
+    }
+
+    document.getElementById("btnSaveRecord").innerText = "Update Record";
+    openModal("addDocModal");
+  }
+
+  function populateMemberSelect(selectedMember) {
+    const sel = document.getElementById("docMemberSelect");
+    sel.innerHTML = "";
+    state.members.forEach(m => {
+      const opt = document.createElement("option");
+      opt.value = m;
+      opt.innerText = m;
+      if (m === selectedMember) opt.selected = true;
+      sel.appendChild(opt);
+    });
+  }
+
+  async function handleSaveRecord(e) {
+    e.preventDefault();
+    const editId = document.getElementById("editRecordId").value;
+    const fileInput = document.getElementById('docFile');
+    let fileData = null;
+
+    if (fileInput.files.length > 0) {
+      const file = fileInput.files[0];
+      fileData = {
+        name: file.name,
+        type: file.type,
+        data: await fileToBase64(file)
+      };
+    }
+
+    if (editId) {
+      const rec = state.records.find(r => r.id === editId);
+      if (rec) {
+        rec.member = document.getElementById('docMemberSelect').value;
+        rec.category = document.getElementById('docCategory').value;
+        rec.title = document.getElementById('docTitle').value.trim();
+        rec.code = document.getElementById('docCode').value.trim();
+        rec.notes = document.getElementById('docNotes').value.trim();
+        if (fileData) rec.file = fileData;
+        showToast("Record updated.");
+      }
+    } else {
+      const newRecord = {
+        id: crypto.randomUUID(),
+        member: document.getElementById('docMemberSelect').value,
+        category: document.getElementById('docCategory').value,
+        title: document.getElementById('docTitle').value.trim(),
+        code: document.getElementById('docCode').value.trim(),
+        notes: document.getElementById('docNotes').value.trim(),
+        file: fileData,
+        createdAt: new Date().toISOString()
+      };
+      state.records.push(newRecord);
+      showToast("Record securely stored.");
+    }
+
+    saveState();
+    closeModal('addDocModal');
+  }
+
+  function promptDeleteRecord(id) {
+    const record = state.records.find(r => r.id === id);
+    if (!record) return;
+
+    document.getElementById("confirmTitle").innerText = "Delete Record";
+    document.getElementById("confirmBody").innerText = `Permanently delete '${record.title}'?`;
+
+    const actionBtn = document.getElementById("confirmActionBtn");
+    actionBtn.onclick = () => {
+      state.records = state.records.filter(r => r.id !== id);
+      saveState();
+      closeModal("confirmDialog");
+      showToast("Record deleted.");
+    };
+
+    openModal("confirmDialog");
+  }
+
+  function render() {
+    const memberListEl = document.getElementById('memberList');
+    memberListEl.innerHTML = '';
+    
+    state.members.forEach(member => {
+      const initial = member.charAt(0).toUpperCase();
+      const role = state.memberRoles[member] || "Member";
+      const docCount = state.records.filter(r => r.member === member).length;
+      const li = document.createElement('li');
+      li.className = `member-item ${member === state.activeMember ? 'active' : ''}`;
+      li.innerHTML = `
+        <div class="member-avatar">${initial}</div>
+        <div class="member-info-col">
+          <span class="member-name-txt">${escapeHtml(member)}</span>
+          <span class="member-role-txt">${escapeHtml(role)}</span>
+        </div>
+        <span class="member-doc-count">${docCount}</span>
+      `;
+      li.onclick = () => setActiveMember(member);
+      memberListEl.appendChild(li);
+    });
+
+    document.getElementById('activeMemberHeading').innerText = `Good morning, ${state.activeMember} 👋`;
+    document.getElementById('sidebarActiveName').innerText = state.activeMember;
+    document.getElementById('sidebarActiveRole').innerText = state.memberRoles[state.activeMember] || "Active Profile";
+    document.getElementById('sidebarAvatar').innerText = state.activeMember.charAt(0).toUpperCase();
+
+    document.querySelectorAll('.filter-chip').forEach(btn => {
+      const isAll = state.currentFilter === 'ALL' && btn.textContent.includes('All Records');
+      const isCat = state.currentFilter !== 'ALL' && btn.getAttribute('onclick') && btn.getAttribute('onclick').includes("'" + state.currentFilter + "'");
+      btn.classList.toggle('active', !!(isAll || isCat));
+    });
+
+    renderGrid();
+    renderManageMembersModal();
+  }
+
+  function renderGrid() {
+    const grid = document.getElementById('recordsGrid');
+    grid.innerHTML = '';
+
+    let filtered = state.records.filter(r => 
+      r.member === state.activeMember && 
+      (state.currentFilter === 'ALL' || r.category === state.currentFilter)
+    );
+
+    if (searchQuery) {
+      filtered = filtered.filter(r => 
+        r.title.toLowerCase().includes(searchQuery) ||
+        (r.code && r.code.toLowerCase().includes(searchQuery)) ||
+        (r.notes && r.notes.toLowerCase().includes(searchQuery)) ||
+        r.category.toLowerCase().includes(searchQuery)
+      );
+    }
+
+    if (filtered.length === 0) {
+      grid.innerHTML = `
+        <div class="empty-state" style="grid-column: 1 / -1;">
+          <i data-lucide="folder-open" style="width:48px;height:48px;"></i>
+          <h3 style="font-size: 1.25rem; font-weight:700; color: var(--text-main);">No Records Found</h3>
+          <p style="font-size: 0.9rem; color:var(--text-dim); max-width:400px;">Add policies, loan folios, property papers, or emergency contacts for this profile.</p>
+          <button class="btn-primary" style="margin-top:16px;" onclick="openAddDocModal()">+ Add New Record</button>
+        </div>
+      `;
+      lucide.createIcons();
+      return;
+    }
+
+    filtered.forEach(record => {
+      const catInfo = categoryMap[record.category] || categoryMap['Other'];
+      const card = document.createElement('div');
+      card.className = `doc-card`;
+      card.innerHTML = `
+        <span class="badge ${catInfo.class}"><i data-lucide="${catInfo.icon}" style="width:14px;height:14px;"></i> ${escapeHtml(record.category)}</span>
+        <h3 class="doc-title">${escapeHtml(record.title)}</h3>
+        
+        ${record.code ? `
+          <div class="code-box">
+            <span>${escapeHtml(record.code)}</span>
+            <button class="btn-icon-action" title="Copy code" onclick="copyText('${escapeHtml(record.code)}')"><i data-lucide="copy" style="width:16px;height:16px;"></i></button>
+          </div>
+        ` : ''}
+
+        ${record.notes ? `<div class="notes-box">${escapeHtml(record.notes)}</div>` : ''}
+
+        ${record.file ? `
+          <div class="file-attachment">
+            <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display:flex; align-items:center; gap:8px;">
+              <i data-lucide="paperclip" style="width:16px;height:16px;"></i> ${escapeHtml(record.file.name)}
+            </span>
+            <button class="btn-icon-action" onclick="downloadAttachment('${record.id}')" title="Download" style="color:var(--lime-primary);"><i data-lucide="download" style="width:16px;height:16px;"></i></button>
+          </div>
+        ` : ''}
+
+        <div class="doc-card-actions">
+          <button class="btn-icon-action" onclick="openEditDocModal('${record.id}')" title="Edit Record">
+            <i data-lucide="edit-3" style="width:16px;height:16px;"></i>
+          </button>
+          <button class="btn-icon-action trash" onclick="promptDeleteRecord('${record.id}')" title="Delete Record">
+            <i data-lucide="trash-2" style="width:16px;height:16px;"></i>
+          </button>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+    lucide.createIcons();
+  }
+
+  async function getKey(password, salt) {
+    const enc = new TextEncoder();
+    const baseKey = await crypto.subtle.importKey(
+      "raw", enc.encode(password), { name: "PBKDF2" }, false, ["deriveKey"]
+    );
+    return crypto.subtle.deriveKey(
+      {
+        name: "PBKDF2",
+        salt: salt,
+        iterations: 100000,
+        hash: "SHA-256"
+      },
+      baseKey,
+      { name: "AES-GCM", length: 256 },
+      false,
+      ["encrypt", "decrypt"]
+    );
+  }
+
+  async function handleExport(e) {
+    e.preventDefault();
+    const password = document.getElementById('exportPassphrase').value;
+    if (!password) return;
+
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const key = await getKey(password, salt);
+    
+    const enc = new TextEncoder();
+    const plaintext = enc.encode(JSON.stringify(state));
+    
+    const ciphertext = await crypto.subtle.encrypt(
+      { name: "AES-GCM", iv: iv },
+      key,
+      plaintext
+    );
+
+    const exportPackage = {
+      salt: Array.from(salt),
+      iv: Array.from(iv),
+      payload: Array.from(new Uint8Array(ciphertext))
+    };
+
+    const blob = new Blob([JSON.stringify(exportPackage)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `monezy_vault_backup_${new Date().toISOString().slice(0,10)}.vault`;
+    a.click();
+    URL.revokeObjectURL(url);
+    
+    closeModal('exportModal');
+    document.getElementById('exportPassphrase').value = '';
+    showToast("Encrypted .vault backup generated.");
+  }
+
+  async function handleImport(e) {
+    e.preventDefault();
+    const fileInput = document.getElementById('importFile');
+    const password = document.getElementById('importPassphrase').value;
+
+    if (!fileInput.files.length || !password) return;
+
+    const file = fileInput.files[0];
+    const text = await file.text();
+
+    try {
+      const parsed = JSON.parse(text);
+      const salt = new Uint8Array(parsed.salt);
+      const iv = new Uint8Array(parsed.iv);
+      const payload = new Uint8Array(parsed.payload);
+
+      const key = await getKey(password, salt);
+      const decrypted = await crypto.subtle.decrypt(
+        { name: "AES-GCM", iv: iv },
+        key,
+        payload
+      );
+
+      const dec = new TextDecoder();
+      const restored = JSON.parse(dec.decode(decrypted));
+      if (!applyLoadedState(restored.state || restored)) {
+        throw new Error("Invalid vault payload");
+      }
+      await saveState();
+      showToast("Vault successfully restored!");
+      closeModal('importModal');
+      document.getElementById('importPassphrase').value = '';
+      document.getElementById('importFile').value = '';
+    } catch (err) {
+      showToast("Decryption failed. Incorrect passphrase.", true);
+    }
+  }
+
+  function openModal(id) { 
+    const el = document.getElementById(id);
+    if (el) {
+      el.classList.add("active");
+      document.body.style.overflow = "hidden";
+      lucide.createIcons();
+    }
+  }
+  function closeModal(id) { 
+    const el = document.getElementById(id);
+    if (el) {
+      el.classList.remove("active");
+      if (document.querySelectorAll(".modal-backdrop.active").length === 0) {
+        document.body.style.overflow = "auto";
+      }
+    }
+  }
+
+  function fileToBase64(file) {
+    return new Promise((res, rej) => {
+      const reader = new FileReader();
+      reader.onload = () => res(reader.result);
+      reader.onerror = rej;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function downloadAttachment(recordId) {
+    const record = state.records.find(r => r.id === recordId);
+    if (!record || !record.file) return;
+
+    const a = document.createElement('a');
+    a.href = record.file.data;
+    a.download = record.file.name;
+    a.click();
+  }
+
+  function copyText(str) {
+    navigator.clipboard.writeText(str);
+    showToast("Copied to clipboard!");
+  }
+
+  function escapeHtml(unsafe) {
+    return (unsafe || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-backdrop.active').forEach(m => closeModal(m.id));
+    }
+  });
+
+  init();
+</script>
+</body>
+</html>
