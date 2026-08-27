@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PPP Calculator — Purchasing Power Parity | Monezy</title>
+  <meta name="description" content="Convert salaries and prices with World Bank PPP. See equivalent pay, cost of living, and whether a currency is cheap or expensive versus the market exchange rate.">
+  <link rel="canonical" href="https://www.monezy.in/ppp-calculator.html">
+  <meta property="og:title" content="PPP Calculator — Purchasing Power Parity">
+  <meta property="og:description" content="World Bank ICP-based purchasing power parity converter for salaries, cost of living, and currency fair value.">
+  <meta property="og:url" content="https://www.monezy.in/ppp-calculator.html">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --green: #00C805;
+      --green-dark: #00A304;
+      --green-soft: #E8FBE8;
+      --ink: #121212;
+      --muted: #5C6570;
+      --line: #E6E8EB;
+      --bg: #F5F7F8;
+      --card: #FFFFFF;
+      --blue: #147AFC;
+      --accent: #FF5C35;
+      --purple: #7B61FF;
+      --warn: #B45309;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+    a { color: inherit; }
+    .top {
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+    .top-in, .wrap {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    .top-in {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      gap: 16px;
+    }
+    .logo {
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      text-decoration: none;
+      font-size: 1.15rem;
+    }
+    .logo span { color: var(--green); }
+    .top-links { display: flex; gap: 18px; font-size: 0.9rem; color: var(--muted); }
+    .top-links a { text-decoration: none; }
+    .top-links a:hover { color: var(--ink); }
+    header.hero {
+      background: linear-gradient(180deg, #fff 0%, var(--bg) 100%);
+      padding: 36px 0 8px;
+    }
+    h1 {
+      font-size: clamp(1.7rem, 3vw, 2.4rem);
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 10px;
+    }
+    .lede { color: var(--muted); max-width: 720px; margin-bottom: 18px; }
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .chip {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .chip strong { color: var(--ink); font-weight: 600; }
+    .tabs {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .tab {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .tab.active {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+    }
+    .panel { display: none; padding: 20px 0 48px; }
+    .panel.active { display: block; }
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(280px, 420px) 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 8px 24px rgba(16, 24, 40, 0.04);
+    }
+    .card h2 { font-size: 1.05rem; margin-bottom: 14px; }
+    label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 11px 12px;
+      font: inherit;
+      background: #fff;
+      margin-bottom: 14px;
+    }
+    input[type="checkbox"] {
+      width: auto;
+      margin: 0 8px 14px 0;
+      padding: 0;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(0, 200, 5, 0.18);
+    }
+    .pair {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 8px;
+      align-items: end;
+    }
+    .swap {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: #fff;
+      cursor: pointer;
+      margin-bottom: 14px;
+      font-size: 1.1rem;
+    }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .btn {
+      width: 100%;
+      background: var(--green);
+      color: #fff;
+      border: 0;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+    .btn:hover { background: var(--green-dark); }
+    .btn.secondary {
+      background: #fff;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+    .headline {
+      font-size: 1.7rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+    .headline span { color: var(--green); }
+    .sub { color: var(--muted); margin-bottom: 18px; }
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .kpi {
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .kpi .lbl { font-size: 0.75rem; color: var(--muted); margin-bottom: 4px; }
+    .kpi .val { font-weight: 700; font-size: 1.05rem; }
+    .kpi .hint { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+    .insight {
+      background: var(--green-soft);
+      border: 1px solid #c6f0c7;
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 0.92rem;
+      margin-bottom: 16px;
+    }
+    .note { font-size: 0.8rem; color: var(--muted); }
+    .work {
+      margin-top: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.78rem;
+      background: #0f1720;
+      color: #d7e2ea;
+      border-radius: 12px;
+      padding: 14px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); }
+    th { color: var(--muted); font-size: 0.75rem; cursor: pointer; white-space: nowrap; }
+    tbody tr:hover { background: #fafafa; }
+    .right { text-align: right; }
+    .cheap { color: #047857; }
+    .dear { color: #b91c1c; }
+    .search { margin-bottom: 12px; }
+    .basket-grid { display: grid; gap: 8px; }
+    .basket-row { display: grid; grid-template-columns: 1.4fr 1fr 1fr auto; gap: 8px; }
+    .basket-row button {
+      height: 42px;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .explain { padding: 8px 0 40px; }
+    .explain h2 { font-size: 1.2rem; margin: 28px 0 10px; }
+    .explain p, .explain li { color: var(--muted); margin-bottom: 8px; }
+    .explain ul { padding-left: 18px; }
+    footer.app {
+      border-top: 1px solid var(--line);
+      padding: 28px 0;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    @media (max-width: 860px) {
+      .grid, .pair, .row2, .kpis, .basket-row { grid-template-columns: 1fr; }
+      .swap { width: 100%; }
+      .top-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <div class="top-in">
+      <a class="logo" href="index.html">MONE<span>ZY</span></a>
+      <nav class="top-links">
+        <a href="index.html#calculators">Calculators</a>
+        <a href="#method">Method</a>
+        <a href="https://www.worldbank.org/en/programs/icp" rel="noopener">ICP</a>
+      </nav>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div class="wrap">
+      <h1>Purchasing Power Parity calculator</h1>
+      <p class="lede">See what a salary, rent, or rupee is actually worth in another country. Uses World Bank International Comparison Program conversion factors — not tourist prices or a single burger.</p>
+      <div class="meta-row">
+        <span class="chip">Data year <strong id="dataYear">—</strong></span>
+        <span class="chip">Economies <strong id="dataCount">—</strong></span>
+        <span class="chip">WDI update <strong id="dataUpdated">—</strong></span>
+        <span class="chip" id="liveStatus">Embedded snapshot</span>
+      </div>
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-tab="salary" type="button">Equivalent salary</button>
+        <button class="tab" data-tab="living" type="button">Cost of living</button>
+        <button class="tab" data-tab="fx" type="button">Currency fair value</button>
+        <button class="tab" data-tab="explore" type="button">Country explorer</button>
+        <button class="tab" data-tab="basket" type="button">Build a basket</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="panel active" id="tab-salary">
+      <div class="grid">
+        <form class="card" id="salaryForm">
+          <h2>What should you earn to live the same?</h2>
+          <label for="amount">Amount in the origin country</label>
+          <input id="amount" type="number" min="0" step="any" value="1500000" required>
+          <div class="row2">
+            <div>
+              <label for="period">Shown as</label>
+              <select id="period">
+                <option value="1">Annual</option>
+                <option value="12">Monthly</option>
+              </select>
+            </div>
+            <div>
+              <label for="series">Basket</label>
+              <select id="series">
+                <option value="cons">Household consumption (best for salaries)</option>
+                <option value="gdp">Whole-economy GDP PPP</option>
+              </select>
+            </div>
+          </div>
+          <div class="pair">
+            <div>
+              <label for="from">From</label>
+              <select id="from"></select>
+            </div>
+            <button class="swap" type="button" id="swap" title="Swap countries">⇄</button>
+            <div>
+              <label for="to">To</label>
+              <select id="to"></select>
+            </div>
+          </div>
+          <label><input type="checkbox" id="indianFmt" style="width:auto;margin:0 8px 0 0;">Indian grouping (lakhs / crores)</label>
+          <button class="btn" type="submit">Calculate PPP</button>
+        </form>
+        <div class="card" id="salaryOut">
+          <p class="sub">Enter an amount and two countries. Household consumption PPP is the right series for pay and day-to-day prices; GDP PPP is for comparing whole economies.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="tab-living">
+      <div class="grid">
+        <div class="card">
+          <h2>Price of a US $100 basket</h2>
+          <p class="note" style="margin-bottom:12px;">A household basket that costs $100 in the United States, converted with consumption PPPs and shown in US dollars at market FX. Below 100 means cheaper than the US.</p>
+          <label for="liveCountries">Compare (hold Ctrl/Cmd for several)</label>
+          <select id="liveCountries" multiple size="12"></select>
+          <button class="btn" type="button" id="livingGo">Update chart</button>
+        </div>
+        <div class="card">
+          <canvas id="livingChart" height="140"></canvas>
+          <div id="livingTable" style="margin-top:16px;"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="tab-fx">
+      <div class="grid">
+        <div class="card">
+          <h2>Is the currency cheap or expensive?</h2>
+          <p class="note" style="margin-bottom:12px;">Relative PPP versus the US dollar: implied fair FX is the PPP conversion factor (local units per international dollar). If the market asks for more local currency per dollar than PPP, the currency is undervalued.</p>
+          <label for="fxCountry">Currency / economy</label>
+          <select id="fxCountry"></select>
+          <label for="fxSeries">Basket</label>
+          <select id="fxSeries">
+            <option value="cons">Household consumption</option>
+            <option value="gdp">GDP</option>
+          </select>
+          <button class="btn" type="button" id="fxGo">Value the currency</button>
+        </div>
+        <div class="card" id="fxOut"></div>
+      </div>
+    </section>
+
+    <section class="panel" id="tab-explore">
+      <div class="card">
+        <h2>All economies with a PPP</h2>
+        <input class="search" id="search" type="search" placeholder="Search country, region, or currency">
+        <div style="overflow:auto;max-height:70vh;">
+          <table>
+            <thead>
+              <tr>
+                <th data-sort="name">Economy</th>
+                <th data-sort="currency">CCY</th>
+                <th class="right" data-sort="pliCons">Living cost vs US</th>
+                <th class="right" data-sort="pppCons">Cons. PPP</th>
+                <th class="right" data-sort="xr">Market FX</th>
+                <th class="right" data-sort="underval">vs USD</th>
+                <th class="right" data-sort="gdppcPpp">GDP/capita PPP$</th>
+              </tr>
+            </thead>
+            <tbody id="exploreBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="tab-basket">
+      <div class="grid">
+        <div class="card">
+          <h2>Do-it-yourself Jevons PPP</h2>
+          <p class="note" style="margin-bottom:12px;">Price the same items in two places. The geometric mean of the price relatives is the elementary PPP the ICP uses at the basic-heading level when every item is observed in both economies.</p>
+          <div class="row2">
+            <div>
+              <label for="bFrom">Place A currency label</label>
+              <input id="bFrom" value="INR">
+            </div>
+            <div>
+              <label for="bTo">Place B currency label</label>
+              <input id="bTo" value="USD">
+            </div>
+          </div>
+          <div class="basket-grid" id="basketRows"></div>
+          <div class="row2">
+            <button class="btn secondary" type="button" id="addRow">Add item</button>
+            <button class="btn" type="button" id="basketGo">Compute Jevons PPP</button>
+          </div>
+        </div>
+        <div class="card" id="basketOut">
+          <p class="sub">Add at least two comparable items. Official World Bank PPPs remain the right figure for GDP and national salary comparisons — this panel is for learning the index.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="explain" id="method">
+      <h2>How this calculator works</h2>
+      <p>A purchasing power parity is a spatial price index and a currency converter. It answers: how many units of currency B buy the same basket that one unit of currency A buys at home? Market exchange rates do not, because they are set in FX markets and ignore non-traded services such as rent, schooling, and haircuts.</p>
+      <ul>
+        <li><strong>Equivalent salary</strong> uses household consumption PPPs (<code>PA.NUS.PRVT.PP</code>): amount<sub>B</sub> = amount<sub>A</sub> × PPP<sub>B</sub> / PPP<sub>A</sub>. That is the local pay that finances the same ICP consumption basket.</li>
+        <li><strong>International dollars</strong> are the amount divided by the origin PPP (United States = 1). One PPP$ buys a US-like basket everywhere.</li>
+        <li><strong>Price level index</strong> is PPP / market FX, United States = 100. India’s 2025 consumption PLI near 23 means a US $100 household basket costs about $23 at market rates.</li>
+        <li><strong>Currency fair value</strong> treats the PPP conversion factor as the implied LCU per US dollar. If the market FX is higher, the local currency is undervalued on a PPP basis (the Balassa–Samuelson pattern for lower-income economies).</li>
+        <li><strong>Jevons basket</strong> is the geometric mean of bilateral price relatives — the ICP elementary index when the item sample is complete. Official national PPPs then aggregate those headings with GEKS (Fisher bilateral indexes made transitive).</li>
+      </ul>
+      <p>Source: World Bank World Development Indicators, last updated in this snapshot as shown above, based on the International Comparison Program and Eurostat–OECD PPP programmes. PPPs are national averages: Mumbai is not rural Bihar, and Manhattan is not Mississippi. They are also the wrong tool for converting traded financial assets or import invoices — use the market FX for those.</p>
+    </section>
+  </main>
+
+  <footer class="app">
+    <div class="wrap">
+      Estimates only. Not investment, tax, or immigration advice.
+      <a href="index.html">Monezy home</a> ·
+      <a href="taxcalculator.html">Tax</a> ·
+      <a href="real-return-calculator.html">Real return</a>
+    </div>
+  </footer>
+
+  <script src="ppp-engine.js"></script>
+  <script src="ppp-data.js"></script>
+  <script>
+    const E = window.PPPEngine;
+    const state = {
+      data: window.PPP_DATA,
+      sortKey: "pliCons",
+      sortDir: 1,
+      livingChart: null,
+    };
+
+    const $ = (id) => document.getElementById(id);
+
+    function countries() {
+      return state.data.countries
+        .filter(function (c) { return c.pppCons > 0 && c.pppGdp > 0; })
+        .slice()
+        .sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    function byIso(iso) {
+      return state.data.countries.find((c) => c.iso3 === iso);
+    }
+
+    function fillSelect(sel, selected) {
+      const prev = selected || sel.value;
+      sel.innerHTML = countries().map((c) => {
+        const flag = E.flagEmoji(c.iso2);
+        const ccy = c.currency ? ` (${c.currency})` : "";
+        return `<option value="${c.iso3}">${flag} ${c.name}${ccy}</option>`;
+      }).join("");
+      if (prev && byIso(prev)) sel.value = prev;
+    }
+
+    function fillAllSelects() {
+      fillSelect($("from"), $("from").value || "IND");
+      fillSelect($("to"), $("to").value || "USA");
+      fillSelect($("fxCountry"), $("fxCountry").value || "IND");
+      const live = $("liveCountries");
+      const keep = new Set(Array.from(live.selectedOptions).map((o) => o.value));
+      fillSelect(live);
+      ["IND", "USA", "GBR", "SGP", "ARE", "DEU", "JPN", "CHE"].forEach((iso) => {
+        const opt = Array.from(live.options).find((o) => o.value === iso);
+        if (opt) opt.selected = keep.size ? keep.has(iso) : true;
+      });
+    }
+
+    function periodLabel() {
+      return $("period").value === "12" ? "per month" : "per year";
+    }
+
+    function money(v, c) {
+      return E.formatMoney(v, c, { indian: $("indianFmt").checked });
+    }
+
+    function renderSalary(ev) {
+      if (ev) ev.preventDefault();
+      const amount = Number($("amount").value);
+      const from = byIso($("from").value);
+      const to = byIso($("to").value);
+      const series = $("series").value;
+      if (!(amount > 0) || !from || !to) return;
+      const cmp = E.compare(amount, from, to, series);
+      const period = periodLabel();
+      const lc = from.currency === "INR" ? E.lakhCrore(amount) : null;
+      const lcTo = to.currency === "INR" ? E.lakhCrore(cmp.pppTo) : null;
+      const cheaper = cmp.toPli < cmp.fromPli;
+      const livingPct = ((cmp.livingRatio - 1) * 100);
+      const fxLine = cmp.fxTo != null
+        ? `${money(cmp.fxTo, to)} at the market exchange rate (${cmp.fxGap > 0 ? "PPP says you need more local cash than FX conversion" : "PPP says you need less local cash than FX conversion"}).`
+        : "Market FX is unavailable for this pair.";
+
+      $("salaryOut").innerHTML = `
+        <div class="headline">${E.flagEmoji(to.iso2)} <span>${money(cmp.pppTo, to)}</span> ${period}</div>
+        <p class="sub">matches the purchasing power of ${E.flagEmoji(from.iso2)} ${money(amount, from)} ${period}${lc ? " (" + lc + ")" : ""}${lcTo ? " · " + lcTo : ""}.</p>
+        <div class="insight">${cheaper
+          ? `${to.name} is cheaper on this basket (price level ${cmp.toPli.toFixed(0)} vs ${cmp.fromPli.toFixed(0)} in ${from.name}, US = 100). The same lifestyle costs about ${Math.abs(livingPct).toFixed(0)}% less.`
+          : `${to.name} is more expensive on this basket (price level ${cmp.toPli.toFixed(0)} vs ${cmp.fromPli.toFixed(0)} in ${from.name}, US = 100). You need about ${Math.abs(livingPct).toFixed(0)}% more real resources.`}</div>
+        <div class="kpis">
+          <div class="kpi"><div class="lbl">International dollars</div><div class="val">${E.formatNumber(cmp.intl, { digits: 0 })} PPP$</div><div class="hint">Amount ÷ origin PPP</div></div>
+          <div class="kpi"><div class="lbl">Market FX conversion</div><div class="val">${cmp.fxTo != null ? money(cmp.fxTo, to) : "—"}</div><div class="hint">${fxLine}</div></div>
+          <div class="kpi"><div class="lbl">${from.name} price level</div><div class="val">${cmp.fromPli.toFixed(1)}</div><div class="hint">US = 100</div></div>
+          <div class="kpi"><div class="lbl">${to.name} price level</div><div class="val">${cmp.toPli.toFixed(1)}</div><div class="hint">US = 100</div></div>
+        </div>
+        <p class="note">${fxLine}</p>
+        <div class="work">PPP_${from.iso3} = ${E.pppRate(from, series)} ${from.currency} / intl$
+PPP_${to.iso3} = ${E.pppRate(to, series)} ${to.currency} / intl$
+${to.iso3} equivalent = ${amount} × PPP_${to.iso3} / PPP_${from.iso3}
+                 = ${cmp.pppTo}
+intl$ = ${amount} / PPP_${from.iso3} = ${cmp.intl}</div>
+      `;
+      const url = new URL(location.href);
+      url.searchParams.set("from", from.iso3);
+      url.searchParams.set("to", to.iso3);
+      url.searchParams.set("amount", String(amount));
+      url.searchParams.set("series", series);
+      history.replaceState(null, "", url);
+    }
+
+    function livingRows() {
+      const picked = Array.from($("liveCountries").selectedOptions).map((o) => byIso(o.value)).filter(Boolean);
+      const list = picked.length ? picked : ["IND", "USA", "GBR"].map(byIso);
+      return list.map((c) => {
+        const pli = E.priceLevel(c, "cons");
+        const local = E.fromIntl(100, c, "cons");
+        return { c, pli, usd: pli, local };
+      }).sort((a, b) => a.pli - b.pli);
+    }
+
+    function renderLiving() {
+      const rows = livingRows();
+      $("livingTable").innerHTML = `<table><thead><tr><th>Economy</th><th class="right">US$ cost of a $100 US basket</th><th class="right">Local cash</th></tr></thead><tbody>${
+        rows.map((r) => `<tr><td>${E.flagEmoji(r.c.iso2)} ${r.c.name}</td><td class="right">$${E.formatNumber(r.usd, { digits: 1 })}</td><td class="right">${money(r.local, r.c)}</td></tr>`).join("")
+      }</tbody></table>`;
+      const ctx = $("livingChart").getContext("2d");
+      if (state.livingChart) state.livingChart.destroy();
+      state.livingChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: rows.map((r) => r.c.name),
+          datasets: [{
+            label: "Cost of a US $100 household basket (US$)",
+            data: rows.map((r) => Number(r.usd.toFixed(1))),
+            backgroundColor: rows.map((r) => r.c.iso3 === "USA" ? "#00C805" : "#147AFC"),
+          }],
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } },
+        },
+      });
+    }
+
+    function renderFx() {
+      const c = byIso($("fxCountry").value);
+      const series = $("fxSeries").value;
+      if (!c) return;
+      const ppp = E.impliedFxPerUsd(c, series);
+      const xr = c.xr;
+      const und = E.undervaluationVsUsd(c, series);
+      const pli = E.priceLevel(c, series);
+      let verdict;
+      if (und == null) verdict = "No market FX is published for this economy.";
+      else if (Math.abs(und) < 5) verdict = `${c.currency || c.name} trades close to PPP against the US dollar.`;
+      else if (und > 0) verdict = `${c.currency || c.name} is undervalued by about ${und.toFixed(0)}% versus the dollar on this basket — typical for lower price-level economies (Balassa–Samuelson). That does not mean it must appreciate.`;
+      else verdict = `${c.currency || c.name} is overvalued by about ${Math.abs(und).toFixed(0)}% versus the dollar on this basket.`;
+      $("fxOut").innerHTML = `
+        <div class="headline">${E.flagEmoji(c.iso2)} ${c.name}</div>
+        <p class="sub">${verdict}</p>
+        <div class="kpis">
+          <div class="kpi"><div class="lbl">PPP implied FX</div><div class="val">${E.formatNumber(ppp, { digits: 4 })} ${c.currency}/USD</div><div class="hint">Local units per international dollar</div></div>
+          <div class="kpi"><div class="lbl">Market FX</div><div class="val">${xr ? E.formatNumber(xr, { digits: 4 }) + " " + (c.currency || "") + "/USD" : "—"}</div><div class="hint">WDI official / period average</div></div>
+          <div class="kpi"><div class="lbl">Price level</div><div class="val">${pli.toFixed(1)}</div><div class="hint">US = 100</div></div>
+          <div class="kpi"><div class="lbl">GDP per capita, PPP</div><div class="val">${c.gdppcPpp ? "$" + E.formatNumber(c.gdppcPpp, { digits: 0 }) : "—"}</div><div class="hint">Nominal: ${c.gdppc ? "$" + E.formatNumber(c.gdppc, { digits: 0 }) : "—"}</div></div>
+        </div>
+        <div class="work">undervaluation % = (1 − PPP / market FX) × 100
+                 = (1 − ${ppp} / ${xr}) × 100
+                 = ${und == null ? "n/a" : und.toFixed(2)}</div>
+      `;
+    }
+
+    function exploreRows() {
+      const q = ($("search").value || "").trim().toLowerCase();
+      return countries().map((c) => {
+        const und = E.undervaluationVsUsd(c, "cons");
+        return Object.assign({ underval: und }, c);
+      }).filter((c) => {
+        if (!q) return true;
+        return [c.name, c.iso3, c.currency, c.region, c.income].join(" ").toLowerCase().includes(q);
+      }).sort((a, b) => {
+        const av = a[state.sortKey], bv = b[state.sortKey];
+        if (av == null) return 1;
+        if (bv == null) return -1;
+        if (typeof av === "string") return av.localeCompare(bv) * state.sortDir;
+        return (av - bv) * state.sortDir;
+      });
+    }
+
+    function renderExplore() {
+      $("exploreBody").innerHTML = exploreRows().map((c) => {
+        const und = c.underval;
+        const cls = und == null ? "" : und > 5 ? "cheap" : und < -5 ? "dear" : "";
+        const undTxt = und == null ? "—" : (und > 0 ? `${und.toFixed(0)}% cheap` : `${Math.abs(und).toFixed(0)}% dear`);
+        return `<tr>
+          <td>${E.flagEmoji(c.iso2)} ${c.name}</td>
+          <td>${c.currency || ""}</td>
+          <td class="right">${c.pliCons != null ? c.pliCons.toFixed(1) : "—"}</td>
+          <td class="right">${E.formatNumber(c.pppCons, { digits: 3 })}</td>
+          <td class="right">${c.xr ? E.formatNumber(c.xr, { digits: 3 }) : "—"}</td>
+          <td class="right ${cls}">${undTxt}</td>
+          <td class="right">${c.gdppcPpp ? E.formatNumber(c.gdppcPpp, { digits: 0 }) : "—"}</td>
+        </tr>`;
+      }).join("");
+    }
+
+    function defaultBasket() {
+      return [
+        ["Big grocery shop", 4500, 85],
+        ["One-bedroom rent (month)", 25000, 1800],
+        ["Local restaurant meal", 400, 18],
+        ["Monthly transit pass", 1500, 75],
+        ["Haircut", 250, 28],
+      ];
+    }
+
+    function addBasketRow(item, a, b) {
+      const row = document.createElement("div");
+      row.className = "basket-row";
+      row.innerHTML = `<input placeholder="Item" value="${item || ""}">
+        <input type="number" min="0" step="any" placeholder="Price A" value="${a || ""}">
+        <input type="number" min="0" step="any" placeholder="Price B" value="${b || ""}">
+        <button type="button" aria-label="Remove">✕</button>`;
+      row.querySelector("button").onclick = () => row.remove();
+      $("basketRows").appendChild(row);
+    }
+
+    function renderBasket() {
+      const rows = Array.from($("basketRows").children);
+      const fromP = [];
+      const toP = [];
+      const labels = [];
+      rows.forEach((row) => {
+        const [item, a, b] = row.querySelectorAll("input");
+        if (Number(a.value) > 0 && Number(b.value) > 0) {
+          labels.push(item.value || "Item");
+          fromP.push(Number(a.value));
+          toP.push(Number(b.value));
+        }
+      });
+      try {
+        const ppp = E.jevonsPpp(fromP, toP);
+        const a = $("bFrom").value || "A";
+        const b = $("bTo").value || "B";
+        const rels = fromP.map((p, i) => `${labels[i]}: ${toP[i]} / ${p} = ${(toP[i] / p).toFixed(4)}`).join("\n");
+        $("basketOut").innerHTML = `
+          <div class="headline">Jevons PPP = <span>${ppp.toFixed(4)}</span></div>
+          <p class="sub">${b} per 1 ${a}. A ${a} 10,000 basket is ${E.formatNumber(10000 * ppp, { digits: 0 })} ${b} on this sample.</p>
+          <div class="work">${rels}
+
+PPP = exp( average ln(P_B / P_A) ) = ${ppp}</div>
+          <p class="note">Official India consumption PPP is ${byIso("IND").pppCons.toFixed(2)} INR per international dollar — a national ICP sample, not this toy basket.</p>`;
+      } catch (err) {
+        $("basketOut").innerHTML = `<p class="sub">${err.message}</p>`;
+      }
+    }
+
+    function showTab(id) {
+      document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t.dataset.tab === id));
+      document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("active", p.id === "tab-" + id));
+      if (id === "living") renderLiving();
+      if (id === "explore") renderExplore();
+      if (id === "fx") renderFx();
+    }
+
+    function meta() {
+      $("dataYear").textContent = state.data.year;
+      $("dataCount").textContent = String(countries().length);
+      $("dataUpdated").textContent = state.data.lastUpdated || "—";
+    }
+
+    function boot() {
+      meta();
+      fillAllSelects();
+      const params = new URLSearchParams(location.search);
+      if (params.get("from")) $("from").value = params.get("from");
+      if (params.get("to")) $("to").value = params.get("to");
+      if (params.get("amount")) $("amount").value = params.get("amount");
+      if (params.get("series")) $("series").value = params.get("series");
+      defaultBasket().forEach((r) => addBasketRow(r[0], r[1], r[2]));
+      $("salaryForm").addEventListener("submit", renderSalary);
+      ["amount", "from", "to", "period", "series", "indianFmt"].forEach((id) => {
+        $(id).addEventListener("change", renderSalary);
+      });
+      $("swap").onclick = () => {
+        const a = $("from").value;
+        $("from").value = $("to").value;
+        $("to").value = a;
+        renderSalary();
+      };
+      document.querySelectorAll(".tab").forEach((t) => t.onclick = () => showTab(t.dataset.tab));
+      $("livingGo").onclick = renderLiving;
+      $("fxGo").onclick = renderFx;
+      $("fxCountry").onchange = renderFx;
+      $("fxSeries").onchange = renderFx;
+      $("search").oninput = renderExplore;
+      document.querySelectorAll("th[data-sort]").forEach((th) => {
+        th.onclick = () => {
+          const key = th.dataset.sort;
+          if (state.sortKey === key) state.sortDir *= -1;
+          else { state.sortKey = key; state.sortDir = key === "name" ? 1 : -1; }
+          renderExplore();
+        };
+      });
+      $("addRow").onclick = () => addBasketRow("", "", "");
+      $("basketGo").onclick = renderBasket;
+      renderSalary();
+      tryRefresh();
+    }
+
+    async function tryRefresh() {
+      try {
+        const url = "https://api.worldbank.org/v2/country/IND/indicator/PA.NUS.PRVT.PP?format=json&mrnev=1";
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("network");
+        const json = await res.json();
+        const year = json[1] && json[1][0] && json[1][0].date;
+        $("liveStatus").innerHTML = year
+          ? `World Bank reachable · latest India consumption PPP year <strong>${year}</strong>`
+          : "World Bank reachable";
+      } catch (e) {
+        $("liveStatus").textContent = "Using bundled WDI snapshot (offline / blocked API)";
+      }
+    }
+
+    boot();
+  </script>
+</body>
+</html>
