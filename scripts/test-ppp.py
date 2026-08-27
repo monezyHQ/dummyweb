@@ -19,6 +19,7 @@ usa = by["USA"]
 gbr = by["GBR"]
 che = by["CHE"]
 
+assert all(c["pppCons"] > 0 and c["pppGdp"] > 0 for c in data["countries"])
 assert usa["pppCons"] == 1.0
 assert usa["pppGdp"] == 1.0
 assert abs(usa["pliCons"] - 100) < 1e-6

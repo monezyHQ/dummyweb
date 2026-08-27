@@ -458,7 +458,10 @@
     const $ = (id) => document.getElementById(id);
 
     function countries() {
-      return state.data.countries.slice().sort((a, b) => a.name.localeCompare(b.name));
+      return state.data.countries
+        .filter(function (c) { return c.pppCons > 0 && c.pppGdp > 0; })
+        .slice()
+        .sort((a, b) => a.name.localeCompare(b.name));
     }
 
     function byIso(iso) {
@@ -605,7 +608,7 @@ intl$ = ${amount} / PPP_${from.iso3} = ${cmp.intl}</div>
 
     function exploreRows() {
       const q = ($("search").value || "").trim().toLowerCase();
-      return state.data.countries.map((c) => {
+      return countries().map((c) => {
         const und = E.undervaluationVsUsd(c, "cons");
         return Object.assign({ underval: und }, c);
       }).filter((c) => {
@@ -698,7 +701,7 @@ PPP = exp( average ln(P_B / P_A) ) = ${ppp}</div>
 
     function meta() {
       $("dataYear").textContent = state.data.year;
-      $("dataCount").textContent = state.data.count;
+      $("dataCount").textContent = String(countries().length);
       $("dataUpdated").textContent = state.data.lastUpdated || "—";
     }
 

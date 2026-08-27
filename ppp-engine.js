@@ -75,9 +75,10 @@
    * Positive => undervalued (cheaper than the US after converting at market FX).
    */
   function undervaluationVsUsd(country, series) {
-    var ppp = pppRate(country, series);
+    var key = series === "gdp" ? "pppGdp" : "pppCons";
+    var ppp = country && country[key];
     var xr = country && country.xr;
-    if (!(xr > 0)) return null;
+    if (!(ppp > 0) || !(xr > 0)) return null;
     return (1 - ppp / xr) * 100;
   }
 

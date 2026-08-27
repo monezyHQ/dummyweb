@@ -149,6 +149,8 @@ def main() -> None:
             rec["gdppcPpp"] = round(series["gdppcPpp"][iso]["value"], 2)
         if "xr" not in rec and rec.get("pliGdp"):
             rec["xr"] = round(rec["pppGdp"] / (rec["pliGdp"] / 100.0), 8)
+        if rec["pppGdp"] <= 0 or rec["pppCons"] <= 0:
+            continue
         countries.append(rec)
 
     payload = {
