@@ -252,8 +252,9 @@
     state.fav = id;
     save(state);
     [...$("templeSelect").children].forEach((b) => b.classList.toggle("on", b.dataset.id === id));
-    $("aartiLine").textContent = `${t.hi} · ${t.deity} · next aarti ${nextAarti(t)} IST`;
-    $("ytOpen").href = `https://www.youtube.com/channel/${t.yt}/live`;
+    const liveUrl = `https://www.youtube.com/channel/${t.yt}/live`;
+    $("aartiLine").innerHTML = `${t.hi} · ${t.deity} · next aarti ${nextAarti(t)} IST · <a href="${liveUrl}" target="_blank" rel="noopener">YouTube live</a>`;
+    $("ytOpen").href = liveUrl;
     $("veilCopy").textContent = t.quiet
       ? "A still hall. Offerings stay off here — sit and listen."
       : "If the stream is dark, the next aarti will open the doors.";
