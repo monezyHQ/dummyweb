@@ -4,45 +4,53 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mandir — Your Mandir, Always With You</title>
-<meta name="description" content="Live temple darshan, a quiet puja, and a personal mandir on this device. Simple, visual, and with you every day.">
+<meta name="description" content="A quiet digital mandir: sit for darshan, offer flowers and a diya, keep a private sankalp. Your temple, always with you.">
 <meta name="theme-color" content="#0A0604">
 <link rel="canonical" href="https://www.monezy.in/mandir.html">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='78' font-size='78'%3E%F0%9F%95%AF%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect fill='%23120806' width='64' height='64' rx='12'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='32' fill='%23E4C27A'%3Eॐ%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Tiro+Devanagari+Hindi:ital@0;1&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Tiro+Devanagari+Hindi:ital@0;1&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="mandir.css">
 </head>
 <body>
 <a class="skip" href="#app">Skip to mandir</a>
-<div class="atmo" aria-hidden="true">
-  <i></i><i></i><i></i>
+
+<div class="sanctum" aria-hidden="true">
+  <img id="sanctumA" class="sanctum-img on" alt="" src="mandir/img/meenakshi.jpg">
+  <img id="sanctumB" class="sanctum-img" alt="">
+  <div class="vignette"></div>
+  <div class="haze"></div>
+  <div class="floor-glow"></div>
+  <div class="garland"></div>
   <canvas id="dust"></canvas>
-  <div class="grain"></div>
+  <canvas id="petals"></canvas>
+  <div id="diyaLayer" class="diya-layer"></div>
+  <div id="bellRipple" class="bell-ripple"></div>
 </div>
 
 <div id="splash" class="splash">
-  <div class="splash-inner">
-    <span class="om" lang="hi">ॐ</span>
-    <p class="splash-kicker">A quiet temple, in your hands</p>
-    <h1>Your Mandir,<br>always with you.</h1>
-    <button type="button" class="btn gold" id="enterBtn">Enter</button>
+  <div class="threshold">
+    <p class="kicker">Leave the street</p>
+    <h1>Your Mandir,<br><em>always with you.</em></h1>
+    <p class="lede splash-lede">No stream. A still sanctum — lamps, flowers, and the temple you miss.</p>
+    <button type="button" class="btn gold" id="enterBtn">Remove your shoes</button>
   </div>
 </div>
 
 <div id="onboard" class="sheet hidden" role="dialog" aria-labelledby="obTitle">
   <div class="sheet-card onboard">
-    <p class="kicker">Begin</p>
-    <h2 id="obTitle">Pin the temples you miss.</h2>
-    <p class="lede">Darshan, reminders and your home sanctum follow these. You can change them anytime.</p>
-    <div id="obTemples" class="pick-grid"></div>
-    <h3 class="subh">A deity for your home</h3>
+    <p class="kicker">The courtyard</p>
+    <h2 id="obTitle">Which temples do you carry?</h2>
+    <p class="lede">Your home sanctum is built from these photographs. Change them whenever you like.</p>
+    <div id="obTemples" class="photo-pick"></div>
+    <h3 class="subh">Keep a deity by the door</h3>
     <div id="obDeities" class="deity-row"></div>
     <label class="quiet-check">
       <input type="checkbox" id="obNotify" checked>
-      Remind me when a favourite aarti begins
+      Remind me at aarti time
     </label>
-    <button type="button" class="btn gold full" id="obGo">Set my mandir</button>
+    <button type="button" class="btn gold full" id="obGo">Open the doors</button>
   </div>
 </div>
 
@@ -52,89 +60,73 @@
       <p class="greet" id="greet">Namaste</p>
       <h1 class="brand" lang="hi">मंदिर</h1>
     </div>
-    <button type="button" class="icon-btn" id="notifyBtn" aria-label="Darshan reminders">
+    <button type="button" class="icon-btn" id="notifyBtn" aria-label="Aarti reminders">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 00-6 6v3.2L4.4 15.8A1 1 0 005.2 17h13.6a1 1 0 00.8-1.2L18 12.2V9a6 6 0 00-6-6zM10 19a2 2 0 004 0"/></svg>
     </button>
   </header>
 
   <main>
     <section id="view-home" class="view" data-view="home">
-      <article class="hero-card" id="liveHero">
-        <div class="hero-glow"></div>
-        <div class="hero-copy">
-          <span class="live-pill" id="heroLive"><i></i> Sanctum</span>
-          <h2 id="heroName">Live Darshan</h2>
-          <p id="heroMeta">Choose a temple</p>
-          <button type="button" class="btn gold" id="heroEnter">Enter darshan</button>
-        </div>
-      </article>
+      <button type="button" class="enter-sanctum" id="heroEnter">
+        <span class="kicker" id="heroLive">The garbhagriha is open</span>
+        <strong id="heroName">Darshan</strong>
+        <em id="heroMeta">Step inside</em>
+        <span class="btn gold inline">Sit for darshan</span>
+      </button>
 
       <div class="streak" id="streakCard">
-        <div class="streak-diya" aria-hidden="true"></div>
-        <div>
-          <p class="streak-label">Daily darshan</p>
-          <p class="streak-copy" id="streakCopy">Begin with one quiet visit today.</p>
-        </div>
-        <ol class="streak-dots" id="streakDots" aria-label="This week"></ol>
+        <ol class="lamp-week" id="streakDots" aria-label="This week of darshan"></ol>
+        <p class="streak-copy" id="streakCopy">Light one lamp today.</p>
       </div>
 
       <section class="block">
         <div class="block-h">
-          <h3>Your temples</h3>
-          <button type="button" class="text-btn" id="editPins">Edit</button>
+          <h3>Courtyard</h3>
+          <button type="button" class="text-btn" id="editPins">Rearrange</button>
         </div>
         <div class="h-scroll" id="pinTemples"></div>
       </section>
 
       <section class="block">
-        <div class="block-h"><h3>Home sanctum</h3></div>
+        <div class="block-h"><h3>By the door</h3></div>
         <div class="deity-row" id="homeDeities"></div>
       </section>
 
       <section class="block">
-        <div class="block-h"><h3>Today’s quiet work</h3></div>
+        <div class="block-h"><h3>Today</h3></div>
         <ul class="rituals" id="rituals"></ul>
       </section>
 
       <section class="block">
-        <div class="block-h"><h3>Coming near</h3></div>
+        <div class="block-h"><h3>The calendar breathes</h3></div>
         <button type="button" class="fest-card" id="nextFest"></button>
       </section>
     </section>
 
-    <section id="view-darshan" class="view hidden" data-view="darshan">
-      <div class="darshan-stage">
-        <div class="player-wrap" id="playerWrap">
-          <iframe id="yt" title="Live temple darshan" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
-          <div class="player-veil" id="playerVeil">
-            <p class="veil-om" lang="hi">ॐ</p>
-            <p id="veilCopy">Preparing the sanctum…</p>
-            <a class="text-btn" id="ytOpen" href="#" target="_blank" rel="noopener">Open on YouTube</a>
-          </div>
-          <canvas id="petals" class="fx-canvas" aria-hidden="true"></canvas>
-          <div id="diyaLayer" class="diya-layer" aria-hidden="true"></div>
-          <div id="bellRipple" class="bell-ripple" aria-hidden="true"></div>
-        </div>
-        <div class="temple-select" id="templeSelect"></div>
-        <div class="offer-bar" role="toolbar" aria-label="Offerings">
-          <button type="button" data-offer="flower">🌸<span>Pushpa</span></button>
-          <button type="button" data-offer="diya">🪔<span>Diya</span></button>
-          <button type="button" data-offer="pray">🙏<span>Sankalp</span></button>
-          <button type="button" data-offer="bell">🔔<span>Aarti</span></button>
-          <button type="button" id="favTempleBtn" aria-label="Favourite for reminders">♡<span>Remind</span></button>
-        </div>
-        <p class="aarti-line" id="aartiLine"></p>
+    <section id="view-darshan" class="view hidden darshan-view" data-view="darshan">
+      <div class="plaque">
+        <p class="kicker" id="darshanKicker">Darshan</p>
+        <h2 id="darshanHi" lang="hi">मंदिर</h2>
+        <p id="aartiLine"></p>
+      </div>
+      <div class="temple-select" id="templeSelect"></div>
+      <div class="threshold-bar" role="toolbar" aria-label="Offerings">
+        <button type="button" data-offer="flower"><img src="mandir/img/marigold.jpg" alt=""><span>Pushpa</span></button>
+        <button type="button" data-offer="diya"><img src="mandir/img/diya.jpg" alt=""><span>Diya</span></button>
+        <button type="button" data-offer="pray"><img src="mandir/img/lotus.jpg" alt=""><span>Sankalp</span></button>
+        <button type="button" data-offer="bell"><img src="mandir/img/lamps.jpg" alt=""><span>Aarti</span></button>
+        <button type="button" id="favTempleBtn" class="pin-only"><span>♡</span><span>Keep</span></button>
       </div>
     </section>
 
     <section id="view-puja" class="view hidden" data-view="puja">
-      <p class="kicker">Digital puja</p>
-      <h2 class="view-title">Offer with attention.</h2>
+      <p class="kicker">At the threshold</p>
+      <h2 class="view-title">Offer, then be still.</h2>
       <div class="puja-grid">
-        <button type="button" class="puja-tile" data-ritual="flower"><span>🌸</span><b>Flower shower</b><i>Marigold over the sanctum</i></button>
-        <button type="button" class="puja-tile" data-ritual="diya"><span>🪔</span><b>Light a diya</b><i>A lamp for the house</i></button>
-        <button type="button" class="puja-tile" data-ritual="bell"><span>🔔</span><b>Aarti bell</b><i>Ring, then be still</i></button>
-        <button type="button" class="puja-tile" data-ritual="pray"><span>🙏</span><b>Pray / Sankalp</b><i>Kept only on this device</i></button>
+        <button type="button" class="puja-tile photo" data-ritual="flower" style="background-image:url(mandir/img/marigold.jpg)"><b>Flower shower</b><i>Marigold over the sanctum</i></button>
+        <button type="button" class="puja-tile photo" data-ritual="diya" style="background-image:url(mandir/img/diya.jpg)"><b>Light a diya</b><i>A lamp for the house</i></button>
+        <button type="button" class="puja-tile photo" data-ritual="bell" style="background-image:url(mandir/img/aarti.jpg)"><b>Aarti bell</b><i>Ring, then wait</i></button>
+        <button type="button" class="puja-tile photo" data-ritual="pray" style="background-image:url(mandir/img/lotus.jpg)"><b>Pray / Sankalp</b><i>Only on this device</i></button>
       </div>
       <article class="jaap-card">
         <div class="jaap-head">
@@ -159,50 +151,49 @@
       <p class="kicker">Seva</p>
       <h2 class="view-title">Give, then let go.</h2>
       <article class="panel">
-        <h3>Digital dakshina</h3>
-        <p class="lede">Amounts are recorded on this device. Live giving opens the temple’s own verified page — we never collect on their behalf.</p>
+        <h3>Dakshina</h3>
+        <p class="lede">We never collect. Your amount is noted here; the temple’s own page receives the gift.</p>
         <div class="chip-row" id="donateTemple"></div>
         <div class="amt-row" id="donateAmts"></div>
         <div class="field">
-          <label for="donateCustom">Or another amount (₹)</label>
+          <label for="donateCustom">Another amount (₹)</label>
           <input id="donateCustom" type="number" min="1" inputmode="numeric" placeholder="251">
         </div>
-        <button type="button" class="btn gold full" id="donateGo">Record offering &amp; open official page</button>
+        <button type="button" class="btn gold full" id="donateGo">Note offering &amp; open official page</button>
         <ul class="history" id="donateHist"></ul>
       </article>
       <article class="panel">
-        <h3>Prasad to your door</h3>
-        <p class="lede">Where a trust ships prasad, you can place a request. This preview saves the order locally.</p>
+        <h3>Prasad</h3>
+        <p class="lede">A request kept on this device, for trusts that post prasad to the door.</p>
         <div class="field"><label for="prasadTemple">Temple</label><select id="prasadTemple"></select></div>
         <div class="field"><label for="prasadItem">Prasad</label><select id="prasadItem"></select></div>
         <div class="field"><label for="prasadName">Name</label><input id="prasadName" autocomplete="name" maxlength="80"></div>
         <div class="field"><label for="prasadAddr">Address</label><textarea id="prasadAddr" rows="3" maxlength="240"></textarea></div>
-        <button type="button" class="btn gold full" id="prasadGo">Place prasad request</button>
+        <button type="button" class="btn gold full" id="prasadGo">Keep prasad request</button>
         <ul class="history" id="prasadHist"></ul>
       </article>
     </section>
 
     <section id="view-cal" class="view hidden" data-view="cal">
-      <p class="kicker">Calendar</p>
+      <p class="kicker">Utsav</p>
       <h2 class="view-title">The year, unhurried.</h2>
-      <p class="lede">Ekadashi, Purnima and the festivals of temples you pin. Reminders stay on this phone.</p>
+      <p class="lede">Ekadashi, Purnima, and the festivals of temples you keep. Photographs via Wikimedia Commons.</p>
       <ul class="fest-list" id="festList"></ul>
     </section>
   </main>
 
   <nav class="dock" aria-label="Primary">
-    <button type="button" class="on" data-nav="home"><span>Mandir</span></button>
-    <button type="button" data-nav="darshan"><span>Darshan</span></button>
-    <button type="button" data-nav="puja"><span>Puja</span></button>
-    <button type="button" data-nav="seva"><span>Seva</span></button>
-    <button type="button" data-nav="cal"><span>Utsav</span></button>
+    <button type="button" class="on" data-nav="home">Mandir</button>
+    <button type="button" data-nav="darshan">Darshan</button>
+    <button type="button" data-nav="puja">Puja</button>
+    <button type="button" data-nav="seva">Seva</button>
+    <button type="button" data-nav="cal">Utsav</button>
   </nav>
 </div>
 
 <div id="modal" class="sheet hidden" role="dialog" aria-modal="true">
   <div class="sheet-card" id="modalCard"></div>
 </div>
-
 <div id="toast" class="toast" role="status"></div>
 <script src="mandir.js"></script>
 </body>

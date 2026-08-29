@@ -1,17 +1,17 @@
 (() => {
-  const KEY = "mandir.v1";
+  const KEY = "mandir.v2";
   const IST = "Asia/Kolkata";
 
   const TEMPLES = [
-    { id: "tirupati", name: "Tirumala", hi: "तिरुमला", place: "Tirupati, Andhra Pradesh", deity: "Sri Venkateswara", yt: "UCS2Y83GD-fc7qqgNW5uj41g", donate: "https://www.tirumala.org", aarti: ["03:30", "12:00", "18:00", "19:30"], prasad: [{ id: "laddu", name: "Srivari laddu", note: "TTD official counter / post" }], seva: true },
-    { id: "somnath", name: "Somnath", hi: "सोमनाथ", place: "Prabhas Patan, Gujarat", deity: "Bhagwan Somnath", yt: "UC2x4cIbyH67XPtBJua7ZAXg", donate: "https://www.somnath.org", aarti: ["06:00", "12:00", "19:00"], prasad: [{ id: "dry", name: "Dry prasad" }] },
-    { id: "shirdi", name: "Shirdi", hi: "शिर्डी", place: "Shirdi, Maharashtra", deity: "Sai Baba", yt: "UCKGvJDh7g_Kzocbwy7aKicA", donate: "https://sai.org.in", aarti: ["04:30", "12:00", "19:00", "22:00"], prasad: [{ id: "udi", name: "Udi & prasad" }] },
-    { id: "mahakal", name: "Mahakaleshwar", hi: "महाकालेश्वर", place: "Ujjain, Madhya Pradesh", deity: "Mahakaleshwar", yt: "UC2acL93AShyrNvAWt9S-tDg", donate: "https://shrimahakaleshwar.com", aarti: ["04:00", "12:00", "19:00"], prasad: [{ id: "bhasma", name: "Bhasma darshan prasad" }] },
-    { id: "kashi", name: "Kashi Vishwanath", hi: "काशी विश्वनाथ", place: "Varanasi, Uttar Pradesh", deity: "Vishwanath", yt: "UCTFNs9od-yreZs1cAdALwow", donate: "https://shrikashivishwanath.org", aarti: ["03:00", "11:30", "19:00"], prasad: [{ id: "dry", name: "Temple prasad" }] },
-    { id: "siddhi", name: "Siddhivinayak", hi: "सिद्धिविनायक", place: "Mumbai, Maharashtra", deity: "Ganesha", yt: "UC21V41QALQSEaJM8MCJgShg", donate: "https://www.siddhivinayak.org", aarti: ["05:30", "12:20", "19:30", "21:30"], prasad: [{ id: "modak", name: "Modak & dry prasad" }] },
-    { id: "mayapur", name: "ISKCON Mayapur", hi: "मायापुर", place: "Mayapur, West Bengal", deity: "Radha Madhava", yt: "UC3gdxSJ3NFo1mFxwXvQ196Q", donate: "https://www.mayapur.com", aarti: ["04:30", "07:00", "12:00", "19:00"], prasad: [{ id: "maha", name: "Maha prasad" }] },
-    { id: "vaishno", name: "Vaishno Devi", hi: "वैष्णो देवी", place: "Katra, Jammu", deity: "Mata Vaishno Devi", yt: "UCLD6niYb2HF44LxErB_PgdQ", donate: "https://www.maavaishnodevi.org", aarti: ["04:00", "12:00", "18:00"], prasad: [{ id: "dry", name: "Mishri prasad" }] },
-    { id: "harmandir", name: "Harmandir Sahib", hi: "हरिमंदर साहिब", place: "Amritsar, Punjab", deity: "Guru Granth Sahib", yt: "UCjWRdUwKYTc-7JlFRHdmuJQ", donate: "https://sgpc.net", aarti: ["03:00", "18:00"], prasad: [{ id: "karah", name: "Karah prasad" }], quiet: true }
+    { id: "tirupati", name: "Tirumala", hi: "तिरुमला", place: "Tirupati, Andhra Pradesh", deity: "Sri Venkateswara", img: "mandir/img/tirumala.jpg", donate: "https://www.tirumala.org", aarti: ["03:30", "12:00", "18:00", "19:30"], prasad: [{ id: "laddu", name: "Srivari laddu" }] },
+    { id: "somnath", name: "Somnath", hi: "सोमनाथ", place: "Prabhas Patan, Gujarat", deity: "Bhagwan Somnath", img: "mandir/img/somnath.jpg", donate: "https://www.somnath.org", aarti: ["06:00", "12:00", "19:00"], prasad: [{ id: "dry", name: "Dry prasad" }] },
+    { id: "shirdi", name: "Shirdi", hi: "शिर्डी", place: "Shirdi, Maharashtra", deity: "Sai Baba", img: "mandir/img/shirdi.jpg", donate: "https://sai.org.in", aarti: ["04:30", "12:00", "19:00", "22:00"], prasad: [{ id: "udi", name: "Udi & prasad" }] },
+    { id: "mahakal", name: "Mahakaleshwar", hi: "महाकालेश्वर", place: "Ujjain, Madhya Pradesh", deity: "Mahakaleshwar", img: "mandir/img/mahakal.jpg", donate: "https://shrimahakaleshwar.com", aarti: ["04:00", "12:00", "19:00"], prasad: [{ id: "bhasma", name: "Bhasma darshan prasad" }] },
+    { id: "kashi", name: "Kashi Vishwanath", hi: "काशी विश्वनाथ", place: "Varanasi, Uttar Pradesh", deity: "Vishwanath", img: "mandir/img/kashi.jpg", donate: "https://shrikashivishwanath.org", aarti: ["03:00", "11:30", "19:00"], prasad: [{ id: "dry", name: "Temple prasad" }] },
+    { id: "siddhi", name: "Siddhivinayak", hi: "सिद्धिविनायक", place: "Mumbai, Maharashtra", deity: "Ganesha", img: "mandir/img/siddhi.jpg", donate: "https://www.siddhivinayak.org", aarti: ["05:30", "12:20", "19:30", "21:30"], prasad: [{ id: "modak", name: "Modak & dry prasad" }] },
+    { id: "mayapur", name: "ISKCON Mayapur", hi: "मायापुर", place: "Mayapur, West Bengal", deity: "Radha Madhava", img: "mandir/img/mayapur.jpg", donate: "https://www.mayapur.com", aarti: ["04:30", "07:00", "12:00", "19:00"], prasad: [{ id: "maha", name: "Maha prasad" }] },
+    { id: "vaishno", name: "Vaishno Devi", hi: "वैष्णो देवी", place: "Katra, Jammu", deity: "Mata Vaishno Devi", img: "mandir/img/vaishno.jpg", donate: "https://www.maavaishnodevi.org", aarti: ["04:00", "12:00", "18:00"], prasad: [{ id: "dry", name: "Mishri prasad" }] },
+    { id: "harmandir", name: "Harmandir Sahib", hi: "हरिमंदर साहिब", place: "Amritsar, Punjab", deity: "Guru Granth Sahib", img: "mandir/img/harmandir.jpg", donate: "https://sgpc.net", aarti: ["03:00", "18:00"], prasad: [{ id: "karah", name: "Karah prasad" }], quiet: true }
   ];
 
   const DEITIES = [
@@ -70,7 +70,7 @@
   function save(s) { localStorage.setItem(KEY, JSON.stringify(s)); }
 
   const state = Object.assign({
-    temples: ["tirupati", "somnath"],
+    temples: ["tirupati", "somnath", "kashi"],
     deities: ["ganesha", "shiva"],
     fav: "tirupati",
     notify: true,
@@ -88,8 +88,9 @@
   let audioCtx;
   let petalAnim = 0;
   let petals = [];
-  let dust = [];
-  let dustRaf = 0;
+  let useA = true;
+
+  TEMPLES.forEach((t) => { const i = new Image(); i.src = t.img; });
 
   function toast(msg) {
     const t = $("toast");
@@ -108,16 +109,28 @@
   }
 
   function nextAarti(t) {
-    const now = new Date();
-    const parts = new Intl.DateTimeFormat("en-GB", { timeZone: IST, hour: "2-digit", minute: "2-digit", hour12: false }).formatToParts(now);
-    const hh = Number(parts.find((p) => p.type === "hour").value);
-    const mm = Number(parts.find((p) => p.type === "minute").value);
-    const cur = hh * 60 + mm;
+    const parts = new Intl.DateTimeFormat("en-GB", { timeZone: IST, hour: "2-digit", minute: "2-digit", hour12: false }).formatToParts(new Date());
+    const cur = Number(parts.find((p) => p.type === "hour").value) * 60 + Number(parts.find((p) => p.type === "minute").value);
     for (const slot of t.aarti) {
       const [H, M] = slot.split(":").map(Number);
       if (H * 60 + M >= cur) return slot;
     }
     return t.aarti[0] + " tomorrow";
+  }
+
+  function setSanctum(src) {
+    const a = $("sanctumA");
+    const b = $("sanctumB");
+    const incoming = useA ? b : a;
+    const outgoing = useA ? a : b;
+    if (outgoing.getAttribute("src") === src) return;
+    incoming.src = src;
+    incoming.onload = () => {
+      incoming.classList.add("on");
+      outgoing.classList.remove("on");
+      useA = !useA;
+    };
+    if (incoming.complete && incoming.naturalWidth) incoming.onload();
   }
 
   function markDarshan() {
@@ -156,22 +169,29 @@
   function renderStreak() {
     const n = state.streak.count;
     $("streakCopy").textContent = n
-      ? `You have come for darshan ${n} morning${n === 1 ? "" : "s"} in a row.`
-      : "Begin with one quiet visit today.";
+      ? `You have sat in the sanctum ${n} day${n === 1 ? "" : "s"} in a row.`
+      : "Light one lamp today. Come as you are.";
     $("streakDots").innerHTML = weekDots().map((on) => `<li class="${on ? "on" : ""}"></li>`).join("");
+  }
+
+  function photoCard(t, extra = "") {
+    return `<button type="button" class="t-card ${extra}" data-id="${t.id}">
+      <img src="${t.img}" alt="${t.name}">
+      <span>${t.name}<small>${t.place.split(",")[0]}</small></span>
+    </button>`;
   }
 
   function renderHome() {
     $("greet").textContent = greet();
     const fav = temple(state.fav) || temple(state.temples[0]) || TEMPLES[0];
+    setSanctum(fav.img);
     $("heroName").textContent = fav.name;
-    $("heroMeta").textContent = `${fav.place} · Next aarti ${nextAarti(fav)} IST`;
-    $("heroLive").innerHTML = `<i></i> Live darshan`;
+    $("heroMeta").textContent = `${fav.place} · next aarti ${nextAarti(fav)} IST`;
+    $("heroLive").textContent = "The garbhagriha is open";
     $("heroEnter").onclick = () => { showView("darshan"); selectTemple(fav.id); };
     $("pinTemples").innerHTML = state.temples.map((id) => {
       const t = temple(id);
-      if (!t) return "";
-      return `<button type="button" class="t-card ${id === state.fav ? "fav" : ""}" data-id="${id}"><b>${t.name}</b><small>${t.place.split(",")[0]}</small></button>`;
+      return t ? photoCard(t, id === state.fav ? "fav" : "") : "";
     }).join("");
     $("pinTemples").onclick = (e) => {
       const b = e.target.closest("[data-id]");
@@ -181,29 +201,37 @@
     };
     $("homeDeities").innerHTML = DEITIES.filter((d) => state.deities.includes(d.id)).map((d) =>
       `<div class="deity pin"><i>${d.glyph}</i><span>${d.name}</span></div>`
-    ).join("") || `<p class="lede">Pin a deity in Edit.</p>`;
+    ).join("") || `<p class="lede">Keep a deity in Rearrange.</p>`;
     renderStreak();
     renderRituals();
     const next = upcomingFests()[0];
     if (next) {
-      $("nextFest").innerHTML = `<span>${relDate(next.date)}</span><b>${next.name}</b><span>${next.kind === "ekadashi" ? "Ekadashi" : next.kind === "purnima" ? "Purnima" : "Festival"}</span>`;
+      $("nextFest").innerHTML = `<span>${relDate(next.date)}</span><b>${next.name}</b><span>${labelKind(next.kind)}</span>`;
       $("nextFest").onclick = () => showView("cal");
     }
   }
 
+  function labelKind(k) {
+    if (k === "ekadashi") return "Ekadashi";
+    if (k === "purnima") return "Purnima";
+    return "Festival";
+  }
+
   function renderRituals() {
+    const el = $("rituals");
+    if (!el) return;
     const d = todayISO();
     const done = state.rituals[d] || {};
     const items = [
-      { id: "darshan", label: "Sit for live darshan", go: () => showView("darshan") },
-      { id: "diya", label: "Light a diya", go: () => { showView("puja"); openRitual("diya"); } },
+      { id: "darshan", label: "Sit for darshan", go: () => showView("darshan") },
+      { id: "diya", label: "Light a diya", go: () => { showView("darshan"); lightDiya(); } },
       { id: "jaap", label: "One mala of jaap", go: () => showView("puja") },
       { id: "pray", label: "A private sankalp", go: () => openRitual("pray") }
     ];
-    $("rituals").innerHTML = items.map((it) =>
+    el.innerHTML = items.map((it) =>
       `<li class="${done[it.id] ? "done" : ""}"><span>${it.label}</span><button type="button" data-r="${it.id}">${done[it.id] ? "Done" : "Begin"}</button></li>`
     ).join("");
-    $("rituals").onclick = (e) => {
+    el.onclick = (e) => {
       const b = e.target.closest("[data-r]");
       if (!b) return;
       items.find((i) => i.id === b.dataset.r)?.go();
@@ -218,16 +246,15 @@
   function relDate(iso) {
     const [y, m, d] = iso.split("-").map(Number);
     const dt = new Date(y, m - 1, d);
-    const opts = { day: "numeric", month: "short" };
     if (iso === todayISO()) return "Today";
-    return dt.toLocaleDateString("en-IN", opts);
+    return dt.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
   }
 
   function renderCal() {
     $("festList").innerHTML = upcomingFests().map((f) => {
       const on = state.notifyFests.includes(f.id);
       const pin = f.temples.some((id) => state.temples.includes(id));
-      return `<li class="fest-item"><div class="d">${relDate(f.date)}</div><div><b>${f.name}</b><span>${f.kind}${pin ? " · for a temple you keep" : ""}</span></div>
+      return `<li class="fest-item"><div class="d">${relDate(f.date)}</div><div><b>${f.name}</b><span>${labelKind(f.kind)}${pin ? " · a temple you keep" : ""}</span></div>
         <button type="button" class="bell-mini ${on ? "on" : ""}" data-fest="${f.id}" aria-label="Remind">${on ? "●" : "○"}</button></li>`;
     }).join("");
     $("festList").onclick = (e) => {
@@ -239,7 +266,7 @@
       else {
         state.notifyFests.push(id);
         requestNotify();
-        toast("We’ll remind you on this device, if permission is granted.");
+        toast("A reminder will live on this device.");
       }
       save(state);
       renderCal();
@@ -251,32 +278,24 @@
     if (!t) return;
     state.fav = id;
     save(state);
-    [...$("templeSelect").children].forEach((b) => b.classList.toggle("on", b.dataset.id === id));
-    const liveUrl = `https://www.youtube.com/channel/${t.yt}/live`;
-    $("aartiLine").innerHTML = `${t.hi} · ${t.deity} · next aarti ${nextAarti(t)} IST · <a href="${liveUrl}" target="_blank" rel="noopener">YouTube live</a>`;
-    $("ytOpen").href = liveUrl;
-    $("veilCopy").textContent = t.quiet
-      ? "A still hall. Offerings stay off here — sit and listen."
-      : "If the stream is dark, the next aarti will open the doors.";
-    $("playerVeil").classList.remove("off");
-    const src = `https://www.youtube-nocookie.com/embed/live_stream?channel=${t.yt}&autoplay=1&mute=0&rel=0&modestbranding=1&playsinline=1`;
-    $("yt").src = src;
-    setTimeout(() => $("playerVeil").classList.add("off"), 2200);
+    setSanctum(t.img);
+    document.querySelectorAll("#templeSelect [data-id]").forEach((b) => b.classList.toggle("on", b.dataset.id === id));
+    $("darshanHi").textContent = t.hi;
+    $("darshanKicker").textContent = t.quiet ? "A still hall" : "Darshan";
+    $("aartiLine").textContent = `${t.deity} · ${t.place} · next aarti ${nextAarti(t)} IST`;
     markDarshan();
     $("favTempleBtn").classList.toggle("on", state.temples.includes(id));
-    renderOfferQuiet(t);
-  }
-
-  function renderOfferQuiet(t) {
-    document.querySelectorAll(".offer-bar [data-offer]").forEach((b) => {
+    document.querySelectorAll(".threshold-bar [data-offer]").forEach((b) => {
       b.disabled = !!t.quiet;
-      b.style.opacity = t.quiet ? .35 : 1;
     });
+    if (t.quiet) toast("Sit and listen. Offerings rest here.");
   }
 
   function renderTempleChips() {
     $("templeSelect").innerHTML = TEMPLES.map((t) =>
-      `<button type="button" data-id="${t.id}" class="${t.id === state.fav ? "on" : ""}">${t.name}</button>`
+      `<button type="button" data-id="${t.id}" class="${t.id === state.fav ? "on" : ""}">
+        <img src="${t.img}" alt="${t.name}"><em>${t.name}</em>
+      </button>`
     ).join("");
     $("templeSelect").onclick = (e) => {
       const b = e.target.closest("[data-id]");
@@ -289,7 +308,10 @@
     document.querySelectorAll(".dock [data-nav]").forEach((b) => b.classList.toggle("on", b.dataset.nav === name));
     if (name === "home") renderHome();
     if (name === "darshan") { renderTempleChips(); selectTemple(state.fav); }
-    if (name === "puja") renderJaap();
+    if (name === "puja") {
+      setSanctum(temple(state.fav)?.img || TEMPLES[0].img);
+      renderJaap();
+    }
     if (name === "seva") renderSeva();
     if (name === "cal") renderCal();
   }
@@ -317,33 +339,36 @@
       o.type = i ? "sine" : "triangle";
       o.frequency.value = freq;
       g.gain.setValueAtTime(0.0001, now);
-      g.gain.exponentialRampToValueAtTime(0.18 / (i + 1), now + 0.02);
-      g.gain.exponentialRampToValueAtTime(0.0001, now + 2.4 + i * 0.15);
+      g.gain.exponentialRampToValueAtTime(0.16 / (i + 1), now + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + 2.6 + i * 0.12);
       o.connect(g).connect(ctx.destination);
       o.start(now);
       o.stop(now + 3);
     });
     navigator.vibrate?.(40);
-    $("bellRipple").classList.remove("go");
-    void $("bellRipple").offsetWidth;
-    $("bellRipple").classList.add("go");
+    const rip = $("bellRipple");
+    rip.classList.remove("go");
+    void rip.offsetWidth;
+    rip.classList.add("go");
+    document.querySelector(".sanctum").classList.add("aarti");
+    setTimeout(() => document.querySelector(".sanctum").classList.remove("aarti"), 1800);
     ritualDone("bell");
     toast("The bell has spoken. Stay a moment.");
   }
 
   function showerFlowers() {
     const c = $("petals");
-    const r = c.getBoundingClientRect();
-    c.width = r.width; c.height = r.height;
+    c.width = innerWidth;
+    c.height = innerHeight;
     const ctx = c.getContext("2d");
-    for (let i = 0; i < 48; i++) {
+    for (let i = 0; i < 70; i++) {
       petals.push({
         x: Math.random() * c.width,
-        y: -20 - Math.random() * 80,
-        s: 6 + Math.random() * 10,
-        v: 0.8 + Math.random() * 1.6,
+        y: -30 - Math.random() * 160,
+        s: 7 + Math.random() * 12,
+        v: 0.9 + Math.random() * 1.8,
         a: Math.random() * 6,
-        col: Math.random() > 0.4 ? "#E08A3A" : "#F4E4C1"
+        col: Math.random() > 0.35 ? "#E08A3A" : "#F4E4C1"
       });
     }
     if (!petalAnim) petalAnim = requestAnimationFrame(tickPetals);
@@ -352,17 +377,17 @@
     function tickPetals() {
       ctx.clearRect(0, 0, c.width, c.height);
       petals.forEach((p) => {
-        p.y += p.v; p.x += Math.sin(p.y / 20) * 0.6; p.a += 0.04;
+        p.y += p.v; p.x += Math.sin(p.y / 22) * 0.7; p.a += 0.04;
         ctx.save();
         ctx.translate(p.x, p.y);
         ctx.rotate(p.a);
         ctx.fillStyle = p.col;
         ctx.beginPath();
-        ctx.ellipse(0, 0, p.s, p.s * 0.45, 0, 0, Math.PI * 2);
+        ctx.ellipse(0, 0, p.s, p.s * 0.42, 0, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       });
-      petals = petals.filter((p) => p.y < c.height + 20);
+      petals = petals.filter((p) => p.y < c.height + 24);
       if (petals.length) petalAnim = requestAnimationFrame(tickPetals);
       else { ctx.clearRect(0, 0, c.width, c.height); petalAnim = 0; }
     }
@@ -417,9 +442,9 @@
       const x = 100 + Math.cos(a) * r;
       const y = 100 + Math.sin(a) * r;
       const on = i < state.jaap.count;
-      beads.push(`<circle cx="${x}" cy="${y}" r="${i === state.jaap.count % 108 ? 4.2 : 3.1}" fill="${on ? "#E4C27A" : "rgba(247,239,227,.22)"}"/>`);
+      beads.push(`<circle cx="${x}" cy="${y}" r="${i === state.jaap.count % 108 ? 4.2 : 3.1}" fill="${on ? "#E8C572" : "rgba(246,235,216,.22)"}"/>`);
     }
-    svg.innerHTML = `<circle cx="100" cy="100" r="62" fill="none" stroke="rgba(228,194,122,.15)"/>` + beads.join("");
+    svg.innerHTML = `<circle cx="100" cy="100" r="62" fill="none" stroke="rgba(232,197,114,.18)"/>` + beads.join("");
     $("jaapCount").textContent = state.jaap.count;
     $("jaapDay").textContent = `Today: ${state.jaap.total} · A mala is 108`;
   }
@@ -463,6 +488,7 @@
       if (!b) return;
       tid = b.dataset.id;
       [...$("donateTemple").children].forEach((x) => x.classList.toggle("on", x === b));
+      setSanctum(temple(tid).img);
     };
     $("donateAmts").onclick = (e) => {
       const b = e.target.closest("[data-amt]");
@@ -498,7 +524,7 @@
       state.prasad.unshift({ temple: t.name, item, name, date: todayISO() });
       save(state);
       renderPrasadHist();
-      toast("Request saved on this device. Fulfilment is with the temple trust.");
+      toast("Request kept on this device.");
     };
     renderPrasadHist();
   }
@@ -524,10 +550,10 @@
     const cur = Number(parts.find((p) => p.type === "hour").value) * 60 + Number(parts.find((p) => p.type === "minute").value);
     t.aarti.forEach((slot) => {
       const [H, M] = slot.split(":").map(Number);
-      let diff = H * 60 + M - cur;
+      const diff = H * 60 + M - cur;
       if (diff < 1 || diff > 12 * 60) return;
       setTimeout(() => {
-        new Notification(`Darshan · ${t.name}`, { body: `Aarti begins now (${slot} IST).`, silent: false });
+        new Notification(`Darshan · ${t.name}`, { body: `Aarti begins now (${slot} IST).` });
         toast(`${t.name} aarti is beginning.`);
       }, diff * 60 * 1000);
     });
@@ -535,7 +561,9 @@
 
   function renderOnboard() {
     $("obTemples").innerHTML = TEMPLES.map((t) =>
-      `<button type="button" class="pick ${state.temples.includes(t.id) ? "on" : ""}" data-id="${t.id}"><b>${t.name}</b><div class="lede" style="margin:0;font-size:12px">${t.place}</div></button>`
+      `<button type="button" class="pick ${state.temples.includes(t.id) ? "on" : ""}" data-id="${t.id}">
+        <img src="${t.img}" alt=""><b>${t.name}</b>
+      </button>`
     ).join("");
     $("obTemples").onclick = (e) => {
       const b = e.target.closest("[data-id]");
@@ -544,6 +572,7 @@
       const i = state.temples.indexOf(id);
       if (i >= 0) { if (state.temples.length > 1) state.temples.splice(i, 1); }
       else state.temples.push(id);
+      setSanctum(temple(id).img);
       renderOnboard();
     };
     $("obDeities").innerHTML = DEITIES.map((d) =>
@@ -566,18 +595,18 @@
     const resize = () => { c.width = innerWidth; c.height = innerHeight; };
     resize();
     addEventListener("resize", resize);
-    dust = Array.from({ length: 40 }, () => ({
+    const dust = Array.from({ length: 48 }, () => ({
       x: Math.random() * innerWidth, y: Math.random() * innerHeight,
-      r: Math.random() * 1.4 + 0.3, v: Math.random() * 0.25 + 0.05
+      r: Math.random() * 1.5 + 0.3, v: Math.random() * 0.28 + 0.05
     }));
     const tick = () => {
       ctx.clearRect(0, 0, c.width, c.height);
-      ctx.fillStyle = "rgba(228,194,122,.45)";
+      ctx.fillStyle = "rgba(232,197,114,.5)";
       dust.forEach((p) => {
-        p.y -= p.v; if (p.y < 0) p.y = c.height;
+        p.y -= p.v; if (p.y < 0) { p.y = c.height; p.x = Math.random() * c.width; }
         ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
       });
-      dustRaf = requestAnimationFrame(tick);
+      requestAnimationFrame(tick);
     };
     if (!matchMedia("(prefers-reduced-motion: reduce)").matches) tick();
   }
@@ -611,13 +640,11 @@
     const ok = await requestNotify();
     state.notify = ok;
     save(state);
-    toast(ok ? "Aarti reminders are on for your favourite temple." : "Reminders need notification permission.");
+    toast(ok ? "Aarti reminders are on." : "Reminders need permission.");
     scheduleAartiPings();
   };
 
   $("editPins").onclick = () => {
-    state.onboarded = false;
-    save(state);
     $("app").classList.add("hidden");
     $("onboard").classList.remove("hidden");
     renderOnboard();
@@ -628,7 +655,7 @@
     if (b) showView(b.dataset.nav);
   };
 
-  document.querySelector(".offer-bar").onclick = (e) => {
+  document.querySelector(".threshold-bar").onclick = (e) => {
     const b = e.target.closest("[data-offer]");
     if (b) openRitual(b.dataset.offer);
     if (e.target.closest("#favTempleBtn")) {
@@ -638,7 +665,7 @@
       else state.temples.push(id);
       if (!state.temples.length) state.temples.push(id);
       save(state);
-      toast(state.temples.includes(id) ? "Pinned. We’ll watch this aarti." : "Unpinned.");
+      toast(state.temples.includes(id) ? "Kept in your courtyard." : "Released.");
       requestNotify();
     }
   };
@@ -662,4 +689,5 @@
   });
 
   startDust();
+  setSanctum("mandir/img/meenakshi.jpg");
 })();
